@@ -1,6 +1,7 @@
 # 规则名称: Emby
-# 规则统计: 195
+# 规则统计: 4
 
+DOMAIN-SUFFIX,bigmelook.com
+DOMAIN-SUFFIX,oceancloud.asia
 DOMAIN-SUFFIX,as174.de
-DOMAIN-SUFFIX,bili.de
 DOMAIN-SUFFIX,bili.rip
