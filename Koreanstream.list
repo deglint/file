@@ -1,0 +1,6 @@
+# 规则名称: Koreanstream
+# 规则统计: 3
+
+DOMAIN-SUFFIX,tving.com
+DOMAIN-SUFFIX,imbc.com
+DOMAIN-SUFFIX,kr
