@@ -1,17 +1,17 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="KBS1TV.kr",KBS 1TV [Not 24/7]
+#EXTINF:-1 tvg-id="KBS1",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS1.png",KBS 1TV
 http://mytv.dothome.co.kr/ch/public/1.php
-#EXTINF:-1 tvg-id="KBS2TV.kr",KBS 2TV [Not 24/7]
+#EXTINF:-1 tvg-id="KBS2",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2TV
 http://mytv.dothome.co.kr/ch/public/3.php
-#EXTINF:-1 tvg-id="HLATDTV.kr",MBC Yeosu (여수 MBC) (1080p) [Not 24/7]
+#EXTINF:-1 tvg-id="MBC",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/MBC.png",MBC Yeosu
 https://5c3639aa99149.streamlock.net/live_TV/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="HLDHDTV.kr",SBS KBC (1080p) [Not 24/7]
+#EXTINF:-1 tvg-id="SBS",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/SBS.png",SBS KBC
 https://vod.ikbc.co.kr/KBCTV/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="TVChosun.kr" http-referrer="http://broadcast.tvchosun.com/onair/on.cstv",TV Chosun (720p)
+#EXTINF:-1 tvg-id="TV CHOSUN",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/TV%20CHOSUN.png",http-referrer="http://broadcast.tvchosun.com/onair/on.cstv",TV Chosun
 #EXTVLCOPT:http-referrer=http://broadcast.tvchosun.com/onair/on.cstv
 http://onair.cdn.tvchosun.com/origin1/_definst_/tvchosun_s1/playlist.m3u8
-#EXTINF:-1 tvg-id="TVChosun2.kr" http-referrer="http://broadcast.tvchosun.com/onair/on2.cstv",TV Chosun 2 (720p)
+#EXTINF:-1 tvg-id="TV CHOSUN 2",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/TV%20CHOSUN%202.png",http-referrer="http://broadcast.tvchosun.com/onair/on2.cstv",TV Chosun 2
 #EXTVLCOPT:http-referrer=http://broadcast.tvchosun.com/onair/on2.cstv
 http://onair2.cdn.tvchosun.com/origin2/_definst_/tvchosun_s3/playlist.m3u8
-#EXTINF:-1 tvg-id="KTV.kr",Korea TV (1080p)
+#EXTINF:-1 tvg-id="KTV.kr",Korea TV
 https://hlive.ktv.go.kr/live/klive_h.stream/playlist.m3u8
