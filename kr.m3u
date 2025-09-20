@@ -1,7 +1,7 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="KBS1",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS1.png",KBS 1TV
+#EXTINF:-1 tvg-id="KBS1",tvg-logo="https://https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatvEPG.xml",KBS 1
 http://mytv.dothome.co.kr/ch/public/1.php
-#EXTINF:-1 tvg-id="KBS2",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2TV
+#EXTINF:-1 tvg-id="KBS2",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2
 http://mytv.dothome.co.kr/ch/public/3.php
 #EXTINF:-1 tvg-id="MBC",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/MBC.png",MBC Yeosu
 https://5c3639aa99149.streamlock.net/live_TV/tv/playlist.m3u8
