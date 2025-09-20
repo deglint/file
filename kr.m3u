@@ -1,17 +1,15 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="9.kt" tvg-logo="https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatvEPG.xml",KBS 1
+#EXTINF:-1 tvg-id="9.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS1.png",KBS 1
 http://mytv.dothome.co.kr/ch/public/1.php
-#EXTINF:-1 tvg-id="7.kt" tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2
+#EXTINF:-1 tvg-id="7.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2
 http://mytv.dothome.co.kr/ch/public/3.php
 #EXTINF:-1 tvg-id="11.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/MBC.png",MBC
 https://5c3639aa99149.streamlock.net/live_TV/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="5.kt",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/SBS.png",SBS
+#EXTINF:-1 tvg-id="5.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/SBS.png",SBS
 https://vod.ikbc.co.kr/KBCTV/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="C01581.tving",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/TV%20CHOSUN.png",http-referrer="http://broadcast.tvchosun.com/onair/on.cstv",TV 조선
-#EXTVLCOPT:http-referrer=http://broadcast.tvchosun.com/onair/on.cstv
+#EXTINF:-1 tvg-id="C01581.tving" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/TV%20CHOSUN.png",TV 조선
 http://onair.cdn.tvchosun.com/origin1/_definst_/tvchosun_s1/playlist.m3u8
-#EXTINF:-1 tvg-id="C00585.tving",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/TV%20CHOSUN%202.png",http-referrer="http://broadcast.tvchosun.com/onair/on2.cstv",TV 조선 2
-#EXTVLCOPT:http-referrer=http://broadcast.tvchosun.com/onair/on2.cstv
+#EXTINF:-1 tvg-id="C00585.tving" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/TV%20CHOSUN%202.png",TV 조선 2
 http://onair2.cdn.tvchosun.com/origin2/_definst_/tvchosun_s3/playlist.m3u8
 #EXTINF:-1 tvg-id="64.kt",Korea TV
 https://hlive.ktv.go.kr/live/klive_h.stream/playlist.m3u8
