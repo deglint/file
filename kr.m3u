@@ -1,5 +1,5 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="9.kt",tvg-logo="https://https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatvEPG.xml",KBS 1
+#EXTINF:-1 tvg-id="9.kt",tvg-logo="https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatvEPG.xml",KBS 1
 http://mytv.dothome.co.kr/ch/public/1.php
 #EXTINF:-1 tvg-id="KBS2",tvg-logo="https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2
 http://mytv.dothome.co.kr/ch/public/3.php
