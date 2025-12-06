@@ -1,5 +1,5 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="9.kt" tvg-logo="https://pjytv.760515.xyz/logo/KBS1.png",KBS 1
+#EXTINF:-1 tvg-id="9.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS1.png",KBS 1
 http://mytv.dothome.co.kr/ch/public/1.php
 #EXTINF:-1 tvg-id="7.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2
 http://mytv.dothome.co.kr/ch/public/3.php
