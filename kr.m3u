@@ -1,11 +1,11 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="9.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS1.png",KBS 1
+#EXTINF:-1 tvg-id="501.lg" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS1.png",KBS 1
 http://mytv.dothome.co.kr/ch/public/1.php
-#EXTINF:-1 tvg-id="7.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2
+#EXTINF:-1 tvg-id="181.lg" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/KBS2.png",KBS 2
 http://mytv.dothome.co.kr/ch/public/3.php
-#EXTINF:-1 tvg-id="11.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/MBC.png",MBC
+#EXTINF:-1 tvg-id="503.lg" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/MBC.png",MBC
 https://5c3639aa99149.streamlock.net/live_TV/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="5.kt" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/SBS.png",SBS
+#EXTINF:-1 tvg-id="504.lg" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/SBS.png",SBS
 https://vod.ikbc.co.kr/KBCTV/tv/playlist.m3u8
 #EXTINF:-1 tvg-id="C01581.tving" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/TV%20CHOSUN.png",TV 조선
 http://onair.cdn.tvchosun.com/origin1/_definst_/tvchosun_s1/playlist.m3u8
