@@ -48,7 +48,7 @@ jobs:
           cp kr.m3u kr.m3u.bak || true
           export MBN_URI='${{ steps.extract.outputs.mbn_uri }}'
           python3 - << 'PY'
-import re, os
+import re, os, sys
 mbn_uri = os.environ.get('MBN_URI','')
 if not mbn_uri:
     print('MBN_URI empty, nothing to do')
