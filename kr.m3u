@@ -1,4 +1,6 @@
 #EXTM3U
+#EXTINF:-1 tvg-id="503.lg" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/MBC.png",KBS 1
+https://1tv.gscdn.kbs.co.kr/1tv_3.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly8xdHYuZ3NjZG4ua2JzLmNvLmtyLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3Njc0ODQ3MjB9fX1dfQ__&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=R6J9xtFnVHuXpfiayainljn88nXUOK-5UhKIP692gClyiH27a5eAeBHNrrcwmnGpMepz3ZKEn3dPamQvz~GMa~t4mfpL1vK6AAWA70ghOCORgdOhQKKvH7KJdltxqMPE0gJNjQuibSOzB8CxPHu3-VGv25wK8diVGI2f5so9-cUOBJfJcAuHl8SOSHmi~G6sDekGxQ7OdMPNJrT7MEVGALC~fPvHTqE4oGX0X3JA~KgMd6QRlF1xnc1Co23K1jrCDBeKDwd7d0eZF6nrhfceCIGU~uD11GnTUlVrkImgVmMozZbLhYkBel-2f9XQF1S8usjH82dHfUu9~DPSfd8aOQ__
 #EXTINF:-1 tvg-id="503.lg" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/MBC.png",MBC
 https://5c3639aa99149.streamlock.net/live_TV/tv/playlist.m3u8
 #EXTINF:-1 tvg-id="504.lg" tvg-logo="https://gh-proxy.com/https://github.com/kenpark76/kenpark76.github.io/blob/main/logo/SBS.png",SBS
