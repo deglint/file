@@ -1,83 +1,128 @@
-name: Sync MBN URI from kenpark76/koreatv.json
+name: Sync MBN Channels
 
 on:
   schedule:
-    - cron: '0 * * * *'    # 每小时运行一次；按需修改
-  workflow_dispatch:        # 手动触发
+    # 每2小时运行一次
+    - cron: '0 */2 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+permissions:
+  contents: write
 
 jobs:
-  sync-mbn:
+  sync-mbn-channels:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: true
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
 
-      - name: Ensure deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
 
-      - name: Download koreatv.json from upstream
-        run: |
-          UPSTREAM_RAW="https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatv.json"
-          echo "Downloading $UPSTREAM_RAW"
-          curl -fsSL "$UPSTREAM_RAW" -o /tmp/koreatv.json
-
-      - name: Extract MBN URI
-        id: extract
-        run: |
-          MBN_URI=$(jq -r '.[] | select(.name=="MBN") | .uris[0]' /tmp/koreatv.json 2>/dev/null || true)
-          if [ -z "$MBN_URI" ] || [ "$MBN_URI" = "null" ]; then
-            echo "MBN URI not found or empty"
-            echo "mbn_uri=" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          echo "Found MBN URI"
-          echo "mbn_uri=$MBN_URI" >> $GITHUB_OUTPUT
-
-      - name: Replace MBN URL in kr.m3u (awk)
-        run: |
-          if [ -z "${{ steps.extract.outputs.mbn_uri }}" ]; then
-            echo "No MBN URI extracted, skipping replacement"
-            exit 0
-          fi
-          cp kr.m3u kr.m3u.bak || true
-          export MBN_URI='${{ steps.extract.outputs.mbn_uri }}'
-          # 用 awk 找到包含 "MBN" 的 EXTINF 行，然后将其下一行替换为新 URI
-          awk -v new="$MBN_URI" 'BEGIN{found=0}
-            {
-              line=$0
-              low=tolower(line)
-              if(found==1){
-                print new
-                found=2
-                next
-              }
-              if(low ~ /#extinf:[^,]*, *mbn/){
-                print $0
-                found=1
-                next
-              }
-              print $0
-            }
-            END{
-              # 如果文件以 EXTINF MBN 结尾且没有下一行，追加 new
-              if(found==1) print new
-            }' kr.m3u > kr.m3u.tmp && mv kr.m3u.tmp kr.m3u
-
-          echo "Replacement step completed"
-
-      - name: Commit & push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git status --porcelain | grep -q kr.m3u; then
-            git add kr.m3u
-            git commit -m "chore: sync MBN URI from kenpark76/koreatv.json"
-            git push
+    - name: Fetch KoreaTV JSON data
+      run: |
+        curl -s -o koreatv.json https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatv.json
+        
+    - name: Extract MBN and MBN 플러스 URLs
+      run: |
+        # 安装jq用于JSON解析
+        sudo apt-get install -y jq
+        
+        # 从koreatv.json中提取MBN URL
+        MBN_URL=$(jq -r '.[] | select(.name=="MBN") | .url' koreatv.json)
+        
+        # 从koreatv.json中提取MBN 플러스 URL
+        MBN_PLUS_URL=$(jq -r '.[] | select(.name=="MBN 플러스") | .url' koreatv.json)
+        
+        # 保存URL到环境变量供后续步骤使用
+        echo "MBN_URL=$MBN_URL" >> $GITHUB_ENV
+        echo "MBN_PLUS_URL=$MBN_PLUS_URL" >> $GITHUB_ENV
+        
+        echo "提取到的MBN URL: $MBN_URL"
+        echo "提取到的MBN 플러스 URL: $MBN_PLUS_URL"
+        
+    - name: Update kr.m3u file
+      run: |
+        if [ -f "kr.m3u" ]; then
+          # 备份原文件
+          cp kr.m3u kr.m3u.backup
+          
+          # 更新MBN频道链接
+          if [ ! -z "$MBN_URL" ] && [ "$MBN_URL" != "null" ]; then
+            echo "更新MBN频道链接..."
+            # 查找并替换MBN频道的URL
+            sed -i '/#EXTINF.*MBN/,+1s|^http.*$|'"$MBN_URL"'|' kr.m3u
           else
-            echo "No changes to commit"
+            echo "警告：未找到有效的MBN URL"
           fi
+          
+          # 更新MBN 플러스频道链接
+          if [ ! -z "$MBN_PLUS_URL" ] && [ "$MBN_PLUS_URL" != "null" ]; then
+            echo "更新MBN 플러스频道链接..."
+            
+            # 首先检查MBN 플러스是否已存在
+            if grep -q "MBN 플러스" kr.m3u; then
+              # 如果存在，更新现有URL
+              sed -i '/#EXTINF.*MBN 플러스/,+1s|^http.*$|'"$MBN_PLUS_URL"'|' kr.m3u
+            else
+              # 如果不存在，在MBN频道后添加MBN 플러스频道
+              # 查找MBN频道的位置并在其后添加
+              awk -v mbn_plus_url="$MBN_PLUS_URL" '
+                /#EXTINF.*MBN/ && !found {
+                  found = 1
+                  print $0
+                  getline
+                  print $0
+                  # 添加MBN 플러스频道
+                  print "#EXTINF:-1 tvg-id=\"\" tvg-name=\"MBN 플러스\" tvg-logo=\"https://i.postimg.cc/NFxKbbvJ/mbn-plus.png\" group-title=\"韩国\",MBN 플러스"
+                  print mbn_plus_url
+                  next
+                }
+                {print}
+              ' kr.m3u > kr.m3u.tmp && mv kr.m3u.tmp kr.m3u
+            fi
+          else
+            echo "警告：未找到有效的MBN 플러스 URL"
+          fi
+          
+          # 检查文件是否有变化
+          if diff kr.m3u kr.m3u.backup > /dev/null; then
+            echo "没有检测到URL变化，跳过提交"
+            NO_CHANGES=true
+            echo "NO_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "检测到URL变化"
+            NO_CHANGES=false
+            echo "NO_CHANGES=false" >> $GITHUB_ENV
+          fi
+        else
+          echo "错误：kr.m3u文件不存在"
+          exit 1
+        fi
+        
+    - name: Commit and push changes
+      if: env.NO_CHANGES == 'false'
+      run: |
+        # 配置Git
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # 提交更改
+        git add kr.m3u
+        git commit -m "更新MBN和MBN 플러스频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
+        
+        # 推送到仓库
+        git push origin main
+        
+    - name: Skip commit when no changes
+      if: env.NO_CHANGES == 'true'
+      run: |
+        echo "没有检测到变化，跳过提交"
+        echo "MBN URL: $MBN_URL"
+        echo "MBN 플러스 URL: $MBN_PLUS_URL"
