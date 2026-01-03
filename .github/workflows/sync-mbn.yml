@@ -62,11 +62,22 @@ jobs:
         echo "更新MBN频道链接..."
         echo "MBN URL: $MBN_URL"
         
-        # 使用更精确的sed模式
-        sed -i 's|\(#EXTINF.*MBN.*\n\)http.*|\1'"$MBN_URL"'|' kr.m3u
+        # 备份原始文件
+        cp kr.m3u kr.m3u.bak
+        
+        # 使用awk更新MBN频道
+        awk -v mbn_url="$MBN_URL" '
+        /#EXTINF.*MBN/ && !/플러스/ {
+            print $0
+            getline
+            print mbn_url
+            next
+        }
+        {print}
+        ' kr.m3u.bak > kr.m3u
         
         echo "更新后检查:"
-        grep -A 1 "MBN" kr.m3u
+        grep -A 1 "MBN" kr.m3u | grep -v "플러스"
         
     - name: Check if MBN 플러스 exists
       id: check-mbn-plus
@@ -80,63 +91,58 @@ jobs:
           echo "exists=false" >> $GITHUB_OUTPUT
         fi
         
-    - name: Update or add MBN 플러스 channel
-      if: env.MBN_PLUS_URL != '' && env.MBN_PLUS_URL != 'null'
+    - name: Update existing MBN 플러스 channel
+      if: steps.check-mbn-plus.outputs.exists == 'true' && env.MBN_PLUS_URL != '' && env.MBN_PLUS_URL != 'null'
       run: |
-        echo "处理MBN 플러斯频道..."
+        echo "更新现有的MBN 플러斯频道..."
         echo "MBN 플러斯 URL: $MBN_PLUS_URL"
         
-        if [[ "${{ steps.check-mbn-plus.outputs.exists }}" == "true" ]]; then
-          echo "更新现有的MBN 플러斯频道..."
-          # 更新现有的MBN 플러斯频道
-          sed -i 's|\(#EXTINF.*MBN 플러스.*\n\)http.*|\1'"$MBN_PLUS_URL"'|' kr.m3u
-        else
-          echo "添加新的MBN 플러斯频道..."
-          
-          # 使用Python添加新频道，更可靠
-          python3 -c "
-import re
-
-# 读取文件
-with open('kr.m3u', 'r', encoding='utf-8') as f:
-    lines = f.readlines()
-
-# 查找MBN频道位置
-mbn_found = False
-for i, line in enumerate(lines):
-    if '#EXTINF' in line and 'MBN' in line and '플러스' not in line:
-        mbn_found = True
-        # 找到MBN频道，在它后面添加MBN 플러斯
-        insert_index = i + 2  # 跳过EXTINF行和URL行
+        # 备份原始文件
+        cp kr.m3u kr.m3u.bak
         
-        # 构建MBN 플러斯频道条目
-        mbn_plus_entry = [
-            '#EXTINF:-1 tvg-id="" tvg-name="MBN 플러스" tvg-logo="https://i.postimg.cc/NFxKbbvJ/mbn-plus.png" group-title="韩国",MBN 플러스\n',
-            '$MBN_PLUS_URL\n'
-        ]
-        
-        # 插入到正确位置
-        lines[i+2:i+2] = mbn_plus_entry
-        break
-
-if mbn_found:
-    # 写入文件
-    with open('kr.m3u', 'w', encoding='utf-8') as f:
-        f.writelines(lines)
-    print('成功添加MBN 플러斯频道')
-else:
-    print('错误：未找到MBN频道')
-"
-        fi
+        # 使用awk更新MBN 플러斯频道
+        awk -v mbn_plus_url="$MBN_PLUS_URL" '
+        /#EXTINF.*MBN 플러스/ {
+            print $0
+            getline
+            print mbn_plus_url
+            next
+        }
+        {print}
+        ' kr.m3u.bak > kr.m3u
         
         echo "更新后检查MBN 플러斯:"
+        grep -A 1 "MBN 플러스" kr.m3u
+        
+    - name: Add new MBN 플러斯 channel
+      if: steps.check-mbn-plus.outputs.exists == 'false' && env.MBN_PLUS_URL != '' && env.MBN_PLUS_URL != 'null'
+      run: |
+        echo "添加新的MBN 플러斯频道..."
+        echo "MBN 플러斯 URL: $MBN_PLUS_URL"
+        
+        # 备份原始文件
+        cp kr.m3u kr.m3u.bak
+        
+        # 使用awk添加MBN 플러斯频道
+        awk -v mbn_plus_url="$MBN_PLUS_URL" '
+        /#EXTINF.*MBN/ && !/플러스/ {
+            print $0
+            getline
+            print $0
+            print "#EXTINF:-1 tvg-id=\"\" tvg-name=\"MBN 플러스\" tvg-logo=\"https://i.postimg.cc/NFxKbbvJ/mbn-plus.png\" group-title=\"韩国\",MBN 플러스"
+            print mbn_plus_url
+            next
+        }
+        {print}
+        ' kr.m3u.bak > kr.m3u
+        
+        echo "添加后检查MBN 플러斯:"
         grep -A 1 "MBN 플러스" kr.m3u || echo "未找到MBN 플러斯"
         
     - name: Check for changes
       id: check-changes
       run: |
         echo "检查文件变化..."
-        git status
         
         # 检查kr.m3u文件是否有变化
         if ! git diff --quiet kr.m3u; then
@@ -174,3 +180,6 @@ else:
         echo "当前URL:"
         echo "MBN URL: ${{ env.MBN_URL }}"
         echo "MBN 플러斯 URL: ${{ env.MBN_PLUS_URL }}"
+        echo ""
+        echo "文件当前状态:"
+        grep -A 1 "MBN" kr.m3u
