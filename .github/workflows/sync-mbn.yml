@@ -43,7 +43,7 @@ jobs:
         
         # 如果MBN_PLUS_URL为空或与MBN_URL相同，使用不同的URL
         if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" || "$MBN_PLUS_URL" == "$MBN_URL" ]]; then
-          echo "使用不同的MBN 플러스链接..."
+          echo "使用不同的MBN 플러斯链接..."
           if [[ -n "$MBN_URL" && "$MBN_URL" != "null" ]]; then
             # 修改URL使其不同
             MBN_PLUS_URL="${MBN_URL}"
@@ -66,11 +66,7 @@ jobs:
       if: env.MBN_URL != ''
       run: |
         echo "更新MBN频道链接..."
-        # 使用精确匹配更新MBN频道
-        sed -i '/#EXTINF.*MBN.*$/ {
-          N
-          s|\(#EXTINF.*MBN.*\n\)http.*$|\1'"$MBN_URL"'|
-        }' kr.m3u
+        sed -i '/#EXTINF.*tvg-name="MBN"/,+1s|^http.*$|'"$MBN_URL"'|' kr.m3u
         
     - name: Check if MBN 플러스 exists
       id: check-mbn-plus
@@ -85,53 +81,31 @@ jobs:
       if: steps.check-mbn-plus.outputs.exists == 'true' && env.MBN_PLUS_URL != ''
       run: |
         echo "更新现有的MBN 플러斯频道链接..."
-        sed -i '/#EXTINF.*MBN 플러스.*$/ {
-          N
-          s|\(#EXTINF.*MBN 플러스.*\n\)http.*$|\1'"$MBN_PLUS_URL"'|
-        }' kr.m3u
-        
-    - name: Create script to add MBN 플러스 channel
-      if: steps.check-mbn-plus.outputs.exists == 'false' && env.MBN_PLUS_URL != ''
-      run: |
-        echo "创建脚本添加新的MBN 플러斯频道..."
-        
-        # 创建添加频道的脚本
-        cat > add_mbn_plus.sh << 'EOF'
-#!/bin/bash
-FILE="kr.m3u"
-MBN_PLUS_URL="$1"
-MBN_LINE=$(grep -n "#EXTINF.*tvg-name=\"MBN\"" "$FILE" | head -1 | cut -d: -f1)
-
-if [ -n "$MBN_LINE" ]; then
-  # 计算MBN频道结束行（EXTINF行后的URL行）
-  MBN_END_LINE=$((MBN_LINE + 1))
-  
-  # 创建临时文件
-  TMP_FILE=$(mktemp)
-  
-  # 复制文件并插入MBN 플러斯频道
-  {
-    head -n "$MBN_END_LINE" "$FILE"
-    echo '#EXTINF:-1 tvg-id="" tvg-name="MBN 플러스" tvg-logo="https://i.postimg.cc/NFxKbbvJ/mbn-plus.png" group-title="韩国",MBN 플러스'
-    echo "$MBN_PLUS_URL"
-    tail -n +$((MBN_END_LINE + 1)) "$FILE"
-  } > "$TMP_FILE"
-  
-  mv "$TMP_FILE" "$FILE"
-  echo "成功添加MBN 플러斯频道"
-else
-  echo "错误：未找到MBN频道"
-  exit 1
-fi
-EOF
-        
-        chmod +x add_mbn_plus.sh
+        sed -i '/#EXTINF.*MBN 플러스/,+1s|^http.*$|'"$MBN_PLUS_URL"'|' kr.m3u
         
     - name: Add new MBN 플러스 channel
       if: steps.check-mbn-plus.outputs.exists == 'false' && env.MBN_PLUS_URL != ''
       run: |
-        echo "运行脚本添加MBN 플러斯频道..."
-        ./add_mbn_plus.sh "$MBN_PLUS_URL"
+        echo "添加新的MBN 플러斯频道..."
+        
+        # 查找MBN频道位置
+        MBN_LINE=$(grep -n '#EXTINF.*tvg-name="MBN"' kr.m3u | head -1 | cut -d: -f1)
+        
+        if [ -n "$MBN_LINE" ]; then
+          # MBN频道的URL行
+          URL_LINE=$((MBN_LINE + 1))
+          
+          # 读取MBN频道之后的内容
+          head -n "$URL_LINE" kr.m3u > temp.m3u
+          echo '#EXTINF:-1 tvg-id="" tvg-name="MBN 플러스" tvg-logo="https://i.postimg.cc/NFxKbbvJ/mbn-plus.png" group-title="韩国",MBN 플러스' >> temp.m3u
+          echo "$MBN_PLUS_URL" >> temp.m3u
+          tail -n +$((URL_LINE + 1)) kr.m3u >> temp.m3u
+          
+          mv temp.m3u kr.m3u
+          echo "成功添加MBN 플러斯频道"
+        else
+          echo "错误：未找到MBN频道"
+        fi
         
     - name: Check for changes
       id: check-changes
