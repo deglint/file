@@ -43,7 +43,7 @@ jobs:
         
         # 如果MBN_PLUS_URL为空或与MBN_URL相同，使用不同的URL
         if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" || "$MBN_PLUS_URL" == "$MBN_URL" ]]; then
-          echo "使用不同的MBN 플러斯链接..."
+          echo "使用不同的MBN 플러스链接..."
           if [[ -n "$MBN_URL" && "$MBN_URL" != "null" ]]; then
             # 修改URL使其不同
             MBN_PLUS_URL="${MBN_URL/mbn.tv/mbnplus.tv}"
@@ -64,52 +64,68 @@ jobs:
         echo "MBN URL: $MBN_URL"
         echo "MBN 플러스 URL: $MBN_PLUS_URL"
         
-    - name: Update kr.m3u with MBN URL
+    - name: Update MBN channel
       if: env.MBN_URL != ''
       run: |
         echo "更新MBN频道链接..."
-        sed -i '/#EXTINF.*MBN/,+1s|^http.*$|'"$MBN_URL"'|' kr.m3u
+        sed -i '/#EXTINF.*tvg-name="MBN"/,+1s|^http.*$|'"$MBN_URL"'|' kr.m3u
         
     - name: Update or add MBN 플러스 channel
       if: env.MBN_PLUS_URL != ''
       run: |
-        echo "处理MBN 플러斯频道..."
+        echo "处理MBN 플러스频道..."
         
-        # 检查MBN 플러斯是否已存在
+        # 检查MBN 플러스是否已存在
         if grep -q "MBN 플러스" kr.m3u; then
           echo "更新现有的MBN 플러斯频道链接..."
           sed -i '/#EXTINF.*MBN 플러스/,+1s|^http.*$|'"$MBN_PLUS_URL"'|' kr.m3u
         else
           echo "添加新的MBN 플러斯频道..."
           
-          # 找到MBN频道的位置
-          MBN_LINE=$(grep -n "#EXTINF.*MBN" kr.m3u | head -1 | cut -d: -f1)
-          
-          if [ -n "$MBN_LINE" ]; then
-            # 在MBN频道后插入MBN 플러斯频道
-            NEXT_LINE=$((MBN_LINE + 1))
-            
-            # 插入频道信息
-            sed -i "${NEXT_LINE}a\\
-#EXTINF:-1 tvg-id=\"\" tvg-name=\"MBN 플러스\" tvg-logo=\"https://i.postimg.cc/NFxKbbvJ/mbn-plus.png\" group-title=\"韩国\",MBN 플러스\\
-$MBN_PLUS_URL" kr.m3u
-          else
-            echo "错误：未找到MBN频道，无法添加MBN 플러斯频道"
-          fi
+          # 使用Python添加新频道
+          python3 -c "
+import re
+
+# 读取文件
+with open('kr.m3u', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# 找到MBN频道的位置
+pattern = r'(#EXTINF:-1[^\n]*tvg-name=\"MBN\"[^\n]*\n)(http[^\n]*\n)'
+match = re.search(pattern, content)
+
+if match:
+    # 在MBN频道后添加MBN 플러스频道
+    mbn_entry = match.group(0)
+    mbn_plus_entry = '''#EXTINF:-1 tvg-id=\"\" tvg-name=\"MBN 플러스\" tvg-logo=\"https://i.postimg.cc/NFxKbbvJ/mbn-plus.png\" group-title=\"韩国\",MBN 플러스
+$MBN_PLUS_URL
+'''
+    
+    # 替换内容
+    new_content = content.replace(mbn_entry, mbn_entry + mbn_plus_entry)
+    
+    # 写入文件
+    with open('kr.m3u', 'w', encoding='utf-8') as f:
+        f.write(new_content)
+    
+    print('成功添加MBN 플러斯频道')
+else:
+    print('错误：未找到MBN频道')
+"
         fi
         
     - name: Check for changes
       id: check-changes
       run: |
-        git status
+        # 检查文件是否有变化
+        git diff --name-only
+        
         if git diff --quiet kr.m3u; then
           echo "没有检测到变化"
           echo "has_changes=false" >> $GITHUB_OUTPUT
         else
           echo "检测到变化"
           echo "has_changes=true" >> $GITHUB_OUTPUT
-          echo "变化详情:"
-          git diff kr.m3u
         fi
         
     - name: Commit and push changes
@@ -119,7 +135,7 @@ $MBN_PLUS_URL" kr.m3u
         git config --global user.name "github-actions[bot]"
         
         git add kr.m3u
-        git commit -m "自动更新: MBN和MBN 플러斯频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
+        git commit -m "自动更新: MBN和MBN 플러스频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
         
         git push origin main
         
