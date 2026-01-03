@@ -1,23 +1,15 @@
 name: Sync MBN Channels
 
 on:
-  # 定时触发：每2小时运行一次
   schedule:
     - cron: '0 */2 * * *'
-  
-  # 手动触发
   workflow_dispatch:
     inputs:
       reason:
         description: '手动触发的理由'
         required: false
         default: '手动更新MBN频道'
-  
-  # 当代码推送到main分支时也触发
-  push:
-    branches: [main]
 
-# 设置权限
 permissions:
   contents: write
 
@@ -30,236 +22,110 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9'
-
-    - name: Fetch KoreaTV JSON data
-      run: |
-        echo "正在获取koreatv.json数据..."
-        curl -s -o koreatv.json https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatv.json
-        echo "数据获取完成"
-        
-    - name: Install dependencies
+    - name: Setup environment
       run: |
         sudo apt-get update
         sudo apt-get install -y jq curl
-        echo "依赖安装完成"
+        
+    - name: Fetch KoreaTV JSON data
+      run: |
+        curl -s -o koreatv.json https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatv.json
         
     - name: Extract MBN URLs
       id: extract-urls
       run: |
-        echo "开始提取URL..."
-        
-        # 从koreatv.json中提取MBN URL
+        # 提取MBN URL
         MBN_URL=$(jq -r '.[] | select(.name=="MBN") | .url' koreatv.json 2>/dev/null || echo "")
         
-        # 从koreatv.json中提取MBN 플러스 URL
+        # 提取MBN 플러스 URL
         MBN_PLUS_URL=$(jq -r '.[] | select(.name=="MBN 플러스") | .url' koreatv.json 2>/dev/null || echo "")
         
-        # 如果MBN_PLUS_URL为空或与MBN_URL相同，尝试其他名称
+        # 如果MBN_PLUS_URL为空或与MBN_URL相同，使用不同的URL
         if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" || "$MBN_PLUS_URL" == "$MBN_URL" ]]; then
-          echo "尝试查找MBN 플러斯备用名称..."
-          MBN_PLUS_URL=$(jq -r '.[] | select(.name | contains("MBN+") or contains("MBN 플러스") or contains("MBN플러스") or contains("MBN Plus")) | .url' koreatv.json 2>/dev/null || echo "")
-        fi
-        
-        # 如果仍然为空，则使用MBN_URL作为基础
-        if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" ]]; then
-          echo "未找到MBN 플러斯专用链接，将使用修改后的MBN链接"
+          echo "使用不同的MBN 플러斯链接..."
           if [[ -n "$MBN_URL" && "$MBN_URL" != "null" ]]; then
-            MBN_PLUS_URL="${MBN_URL}"
-            MBN_PLUS_URL="${MBN_PLUS_URL}&ch=mbnplus"
+            # 修改URL使其不同
+            MBN_PLUS_URL="${MBN_URL/mbn.tv/mbnplus.tv}"
+            if [[ "$MBN_PLUS_URL" == "$MBN_URL" ]]; then
+              # 如果修改后仍然相同，添加参数
+              if [[ "$MBN_URL" == *"?"* ]]; then
+                MBN_PLUS_URL="${MBN_URL}&channel=plus"
+              else
+                MBN_PLUS_URL="${MBN_URL}?channel=plus"
+              fi
+            fi
           fi
         fi
         
-        # 确保两个URL不同
-        if [[ "$MBN_URL" == "$MBN_PLUS_URL" && -n "$MBN_URL" ]]; then
-          echo "URL相同，为MBN 플러斯添加不同参数..."
-          if [[ "$MBN_PLUS_URL" == *"?"* ]]; then
-            MBN_PLUS_URL="${MBN_PLUS_URL}&platform=plus"
-          else
-            MBN_PLUS_URL="${MBN_PLUS_URL}?platform=plus"
-          fi
-        fi
-        
-        # 输出到环境变量
         echo "MBN_URL=$MBN_URL" >> $GITHUB_ENV
         echo "MBN_PLUS_URL=$MBN_PLUS_URL" >> $GITHUB_ENV
         
-        echo "提取结果："
         echo "MBN URL: $MBN_URL"
-        echo "MBN 플러斯 URL: $MBN_PLUS_URL"
+        echo "MBN 플러스 URL: $MBN_PLUS_URL"
         
-    - name: Create update script
+    - name: Update kr.m3u with MBN URL
+      if: env.MBN_URL != ''
       run: |
-        # 创建Python更新脚本
-        python3 -c "
-import re
-
-def update_m3u_file():
-    try:
-        # 读取文件
-        with open('kr.m3u', 'r', encoding='utf-8') as f:
-            content = f.read()
+        echo "更新MBN频道链接..."
+        sed -i '/#EXTINF.*MBN/,+1s|^http.*$|'"$MBN_URL"'|' kr.m3u
         
-        mbn_url = '${{ env.MBN_URL }}'
-        mbn_plus_url = '${{ env.MBN_PLUS_URL }}'
-        
-        # 更新MBN频道
-        mbn_pattern = r'(#EXTINF:-1[^\n]*MBN[^\n]*\n)http[^\n]*'
-        if re.search(mbn_pattern, content, re.IGNORECASE):
-            new_mbn_entry = r'\\1' + mbn_url
-            content = re.sub(mbn_pattern, new_mbn_entry, content, flags=re.IGNORECASE)
-            print(f'更新MBN频道链接为: {mbn_url}')
-        
-        # 更新MBN 플러스频道
-        mbn_plus_pattern = r'(#EXTINF:-1[^\n]*MBN 플러스[^\n]*\n)http[^\n]*'
-        if re.search(mbn_plus_pattern, content, re.IGNORECASE):
-            new_mbn_plus_entry = r'\\1' + mbn_plus_url
-            content = re.sub(mbn_plus_pattern, new_mbn_plus_entry, content, flags=re.IGNORECASE)
-            print(f'更新MBN 플러斯频道链接为: {mbn_plus_url}')
-        else:
-            # 添加MBN 플러斯频道
-            mbn_extinf = re.search(r'#EXTINF:-1[^\n]*MBN[^\n]*\nhttp[^\n]*', content, re.IGNORECASE)
-            if mbn_extinf:
-                mbn_entry = mbn_extinf.group(0)
-                # 创建MBN 플러斯频道条目
-                mbn_plus_entry = mbn_entry.replace('MBN', 'MBN 플러스').replace(mbn_url, mbn_plus_url)
-                # 确保有正确的logo
-                if 'tvg-logo' not in mbn_plus_entry:
-                    mbn_plus_entry = mbn_plus_entry.replace('MBN 플러스', 'MBN 플러스\" tvg-logo=\"https://i.postimg.cc/NFxKbbvJ/mbn-plus.png')
-                content = content.replace(mbn_entry, mbn_entry + '\\n' + mbn_plus_entry)
-                print('添加MBN 플러斯频道')
-        
-        # 写入文件
-        with open('kr.m3u', 'w', encoding='utf-8') as f:
-            f.write(content)
-        
-        return content
-    except Exception as e:
-        print(f'更新文件时出错: {e}')
-        return None
-
-if __name__ == '__main__':
-    update_m3u_file()
-    print('文件更新完成')
-" > update_output.txt
-        
-    - name: Update kr.m3u file
+    - name: Update or add MBN 플러스 channel
+      if: env.MBN_PLUS_URL != ''
       run: |
-        echo "开始更新kr.m3u文件..."
+        echo "处理MBN 플러斯频道..."
         
-        if [ ! -f "kr.m3u" ]; then
-          echo "错误：kr.m3u文件不存在"
-          exit 1
-        fi
-        
-        # 备份原文件
-        cp kr.m3u kr.m3u.backup
-        
-        # 检查并更新MBN频道
-        if [[ -n "$MBN_URL" && "$MBN_URL" != "null" ]]; then
-          echo "运行Python脚本更新文件..."
-          
-          # 直接运行Python代码
-          python3 << 'EOF'
-import re
-
-try:
-    # 读取文件
-    with open('kr.m3u', 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    mbn_url = '${{ env.MBN_URL }}'
-    mbn_plus_url = '${{ env.MBN_PLUS_URL }}'
-    
-    # 更新MBN频道
-    mbn_pattern = r'(#EXTINF:-1[^\n]*MBN[^\n]*\n)http[^\n]*'
-    if re.search(mbn_pattern, content, re.IGNORECASE):
-        new_mbn_entry = r'\1' + mbn_url
-        content = re.sub(mbn_pattern, new_mbn_entry, content, flags=re.IGNORECASE)
-        print(f'更新MBN频道链接为: {mbn_url}')
-    
-    # 更新MBN 플러스频道
-    mbn_plus_pattern = r'(#EXTINF:-1[^\n]*MBN 플러스[^\n]*\n)http[^\n]*'
-    if re.search(mbn_plus_pattern, content, re.IGNORECASE):
-        new_mbn_plus_entry = r'\1' + mbn_plus_url
-        content = re.sub(mbn_plus_pattern, new_mbn_plus_entry, content, flags=re.IGNORECASE)
-        print(f'更新MBN 플러斯频道链接为: {mbn_plus_url}')
-    else:
-        # 添加MBN 플러斯频道
-        mbn_extinf = re.search(r'#EXTINF:-1[^\n]*MBN[^\n]*\nhttp[^\n]*', content, re.IGNORECASE)
-        if mbn_extinf:
-            mbn_entry = mbn_extinf.group(0)
-            # 创建MBN 플러斯频道条目
-            mbn_plus_entry = mbn_entry.replace('MBN', 'MBN 플러스').replace(mbn_url, mbn_plus_url)
-            # 确保有正确的logo
-            if 'tvg-logo' not in mbn_plus_entry:
-                mbn_plus_entry = mbn_plus_entry.replace('MBN 플러스', 'MBN 플러스" tvg-logo="https://i.postimg.cc/NFxKbbvJ/mbn-plus.png')
-            content = content.replace(mbn_entry, mbn_entry + '\n' + mbn_plus_entry)
-            print('添加MBN 플러斯频道')
-    
-    # 写入文件
-    with open('kr.m3u', 'w', encoding='utf-8') as f:
-        f.write(content)
-    
-    print('文件更新完成')
-    
-except Exception as e:
-    print(f'更新文件时出错: {e}')
-    exit(1)
-EOF
+        # 检查MBN 플러斯是否已存在
+        if grep -q "MBN 플러스" kr.m3u; then
+          echo "更新现有的MBN 플러斯频道链接..."
+          sed -i '/#EXTINF.*MBN 플러스/,+1s|^http.*$|'"$MBN_PLUS_URL"'|' kr.m3u
         else
-          echo "警告：未找到有效的MBN URL"
+          echo "添加新的MBN 플러斯频道..."
+          
+          # 找到MBN频道的位置
+          MBN_LINE=$(grep -n "#EXTINF.*MBN" kr.m3u | head -1 | cut -d: -f1)
+          
+          if [ -n "$MBN_LINE" ]; then
+            # 在MBN频道后插入MBN 플러斯频道
+            NEXT_LINE=$((MBN_LINE + 1))
+            
+            # 插入频道信息
+            sed -i "${NEXT_LINE}a\\
+#EXTINF:-1 tvg-id=\"\" tvg-name=\"MBN 플러스\" tvg-logo=\"https://i.postimg.cc/NFxKbbvJ/mbn-plus.png\" group-title=\"韩国\",MBN 플러스\\
+$MBN_PLUS_URL" kr.m3u
+          else
+            echo "错误：未找到MBN频道，无法添加MBN 플러斯频道"
+          fi
         fi
         
-        # 检查是否有变化
-        if cmp -s kr.m3u kr.m3u.backup; then
+    - name: Check for changes
+      id: check-changes
+      run: |
+        git status
+        if git diff --quiet kr.m3u; then
           echo "没有检测到变化"
-          echo "NO_CHANGES=true" >> $GITHUB_ENV
+          echo "has_changes=false" >> $GITHUB_OUTPUT
         else
           echo "检测到变化"
-          echo "NO_CHANGES=false" >> $GITHUB_ENV
-          echo "变化内容："
-          diff -u kr.m3u.backup kr.m3u | head -20
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+          echo "变化详情:"
+          git diff kr.m3u
         fi
         
     - name: Commit and push changes
-      if: env.NO_CHANGES == 'false'
+      if: steps.check-changes.outputs.has_changes == 'true'
       run: |
-        echo "提交更改..."
-        
-        # 配置Git
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "github-actions[bot]"
         
-        # 添加文件
         git add kr.m3u
+        git commit -m "自动更新: MBN和MBN 플러斯频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
         
-        # 检查是否有更改
-        if git diff --cached --quiet; then
-          echo "没有更改可提交"
-          echo "NO_COMMIT=true" >> $GITHUB_ENV
-        else
-          echo "有更改可提交"
-          # 提交更改
-          git commit -m "自动更新: MBN和MBN 플러斯频道链接 $(date '+%Y-%m-%d %H:%M:%S')
-          
-          更新内容:
-          - MBN: ${{ env.MBN_URL }}
-          - MBN 플러斯: ${{ env.MBN_PLUS_URL }}"
-          
-          # 推送到仓库
-          git push origin HEAD:main
-          
-          echo "更改已提交并推送"
-        fi
+        git push origin main
         
     - name: No changes to commit
-      if: env.NO_CHANGES == 'true' || env.NO_COMMIT == 'true'
+      if: steps.check-changes.outputs.has_changes == 'false'
       run: |
         echo "没有检测到需要提交的更改"
-        echo "工作流完成"
+        echo "MBN URL: ${{ env.MBN_URL }}"
+        echo "MBN 플러스 URL: ${{ env.MBN_PLUS_URL }}"
