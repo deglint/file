@@ -96,9 +96,9 @@ jobs:
         echo "MBN_URL=$MBN_URL" >> $GITHUB_ENV
         echo "MBN_PLUS_URL=$MBN_PLUS_URL" >> $GITHUB_ENV
         
-        # 输出到步骤输出
-        echo "::set-output name=mbn_url::$MBN_URL"
-        echo "::set-output name=mbn_plus_url::$MBN_PLUS_URL"
+        # 输出到步骤输出 (新语法)
+        echo "mbn_url=$MBN_URL" >> $GITHUB_OUTPUT
+        echo "mbn_plus_url=$MBN_PLUS_URL" >> $GITHUB_OUTPUT
         
         echo "提取结果："
         echo "MBN URL: $MBN_URL"
@@ -120,65 +120,40 @@ jobs:
         if [[ -n "$MBN_URL" && "$MBN_URL" != "null" ]]; then
           echo "更新MBN频道链接..."
           
-          # 使用Python脚本来更可靠地更新M3U文件
+          # 使用sed更新MBN频道
+          sed -i 's|http.*$|'"$MBN_URL"'|g' kr.m3u
+          
+          # 使用Python脚本来更新M3U文件 (简化版本)
           python3 -c "
-import sys
+import re
 
 # 读取文件
 with open('kr.m3u', 'r', encoding='utf-8') as f:
-    lines = f.readlines()
+    content = f.read()
 
 # 更新MBN频道
-in_mbn_section = False
-updated_mbn = False
-for i, line in enumerate(lines):
-    if '#EXTINF' in line and ('tvg-name=\"MBN\"' in line or ',MBN' in line):
-        in_mbn_section = True
-        # 下一行应该是URL
-        if i+1 < len(lines) and lines[i+1].startswith('http'):
-            lines[i+1] = '$MBN_URL' + '\n'
-            updated_mbn = True
-            in_mbn_section = False
-
-if not updated_mbn:
-    print('警告：未找到MBN频道进行更新')
+mbn_pattern = r'(#EXTINF:-1[^\n]*MBN[^\n]*\n)http[^\n]*'
+new_mbn_entry = r'\1' + '$MBN_URL'
+content = re.sub(mbn_pattern, new_mbn_entry, content, flags=re.IGNORECASE)
 
 # 更新MBN 플러斯频道
-in_mbn_plus_section = False
-updated_mbn_plus = False
-mbn_plus_found = False
-
-for i, line in enumerate(lines):
-    if '#EXTINF' in line and ('MBN 플러스' in line or 'MBN플러스' in line or 'MBN Plus' in line):
-        mbn_plus_found = True
-        in_mbn_plus_section = True
-        # 下一行应该是URL
-        if i+1 < len(lines) and lines[i+1].startswith('http'):
-            lines[i+1] = '$MBN_PLUS_URL' + '\n'
-            updated_mbn_plus = True
-            in_mbn_plus_section = False
-
-# 如果未找到MBN 플러斯频道，在MBN后添加
-if not mbn_plus_found and '$MBN_PLUS_URL' and '$MBN_PLUS_URL' != 'null':
-    print('添加新的MBN 플러斯频道...')
-    # 查找MBN频道位置
-    for i, line in enumerate(lines):
-        if '#EXTINF' in line and ('tvg-name=\"MBN\"' in line or ',MBN' in line):
-            # 确保MBN频道后有URL行
-            if i+1 < len(lines) and lines[i+1].startswith('http'):
-                # 在MBN频道后插入MBN 플러斯
-                mbn_plus_entry = ['#EXTINF:-1 tvg-id=\"\" tvg-name=\"MBN 플러스\" tvg-logo=\"https://i.postimg.cc/NFxKbbvJ/mbn-plus.png\" group-title=\"韩国\",MBN 플러스\n', '$MBN_PLUS_URL\n']
-                lines[i+2:i+2] = mbn_plus_entry
-                updated_mbn_plus = True
-                break
+mbn_plus_pattern = r'(#EXTINF:-1[^\n]*MBN 플러스[^\n]*\n)http[^\n]*'
+if re.search(mbn_plus_pattern, content, re.IGNORECASE):
+    new_mbn_plus_entry = r'\1' + '$MBN_PLUS_URL'
+    content = re.sub(mbn_plus_pattern, new_mbn_plus_entry, content, flags=re.IGNORECASE)
+else:
+    # 添加MBN 플러斯频道
+    mbn_extinf = re.search(r'#EXTINF:-1[^\n]*MBN[^\n]*\nhttp[^\n]*', content, re.IGNORECASE)
+    if mbn_extinf:
+        mbn_entry = mbn_extinf.group(0)
+        mbn_plus_entry = mbn_entry.replace('MBN', 'MBN 플러스').replace('$MBN_URL', '$MBN_PLUS_URL')
+        content = content.replace(mbn_entry, mbn_entry + '\n' + mbn_plus_entry)
 
 # 写入文件
 with open('kr.m3u', 'w', encoding='utf-8') as f:
-    f.writelines(lines)
+    f.write(content)
 
 print('文件更新完成')
-print(f'MBN URL: $MBN_URL')
-print(f'MBN 플러斯 URL: $MBN_PLUS_URL')
 "
         else
           echo "警告：未找到有效的MBN URL"
