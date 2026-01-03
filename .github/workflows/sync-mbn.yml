@@ -31,34 +31,56 @@ jobs:
     - name: Fetch KoreaTV JSON data
       run: |
         curl -s -o koreatv.json https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatv.json
+        echo "显示koreatv.json前200个字符:"
+        head -c 200 koreatv.json
+        echo -e "\n\n显示所有频道名称:"
+        jq -r '.[].name' koreatv.json || echo "无法解析JSON"
         
     - name: Extract MBN URLs
       id: extract-urls
       run: |
+        # 显示JSON结构，帮助我们调试
+        echo "显示JSON结构前几行:"
+        jq '.' koreatv.json | head -50
+        
+        echo -e "\n\n显示所有包含'MBN'的频道:"
+        jq -r '.[] | select(.name | contains("MBN")) | "名称: \(.name), URL: \(.url)"' koreatv.json
+        
         # 提取MBN URL
         MBN_URL=$(jq -r '.[] | select(.name=="MBN") | .url' koreatv.json 2>/dev/null || echo "")
+        echo "MBN URL提取结果: $MBN_URL"
         
-        # 提取MBN 플러스 URL
+        # 尝试多种方式提取MBN 플러스 URL
+        echo -e "\n尝试不同方式提取MBN 플러斯URL..."
+        
+        # 方式1: 精确匹配
         MBN_PLUS_URL=$(jq -r '.[] | select(.name=="MBN 플러스") | .url' koreatv.json 2>/dev/null || echo "")
+        echo "精确匹配结果: $MBN_PLUS_URL"
         
-        # 如果MBN_PLUS_URL为空或与MBN_URL相同，使用不同的URL
-        if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" || "$MBN_PLUS_URL" == "$MBN_URL" ]]; then
-          echo "使用不同的MBN 플러斯链接..."
-          if [[ -n "$MBN_URL" && "$MBN_URL" != "null" ]]; then
-            # 修改URL使其不同
-            MBN_PLUS_URL="${MBN_URL}"
-            # 添加参数使其不同
-            if [[ "$MBN_URL" == *"?"* ]]; then
-              MBN_PLUS_URL="${MBN_URL}&plus=1"
-            else
-              MBN_PLUS_URL="${MBN_URL}?plus=1"
-            fi
-          fi
+        # 方式2: 包含"MBN 플러斯"
+        if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" ]]; then
+          MBN_PLUS_URL=$(jq -r '.[] | select(.name | contains("MBN 플러스")) | .url' koreatv.json 2>/dev/null || echo "")
+          echo "包含匹配结果: $MBN_PLUS_URL"
+        fi
+        
+        # 方式3: 查找可能的MBN 플러斯频道
+        if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" ]]; then
+          # 查找所有名称包含MBN但不只是MBN的频道
+          MBN_PLUS_URL=$(jq -r '.[] | select(.name | contains("MBN") and (.name != "MBN")) | .url' koreatv.json 2>/dev/null | head -1 || echo "")
+          echo "其他MBN频道结果: $MBN_PLUS_URL"
+        fi
+        
+        # 如果仍然为空，则使用已知的链接
+        if [[ -z "$MBN_PLUS_URL" || "$MBN_PLUS_URL" == "null" ]]; then
+          echo "从JSON中未找到MBN 플러斯链接，使用备用链接..."
+          # 根据你提供的koreatv.json第177行，使用这个链接
+          MBN_PLUS_URL="https://youtu.be/5_J8nQSoQj8"
         fi
         
         echo "MBN_URL=$MBN_URL" >> $GITHUB_ENV
         echo "MBN_PLUS_URL=$MBN_PLUS_URL" >> $GITHUB_ENV
         
+        echo -e "\n最终结果:"
         echo "MBN URL: $MBN_URL"
         echo "MBN 플러스 URL: $MBN_PLUS_URL"
         
@@ -95,11 +117,13 @@ jobs:
           # MBN频道的URL行
           URL_LINE=$((MBN_LINE + 1))
           
-          # 读取MBN频道之后的内容
-          head -n "$URL_LINE" kr.m3u > temp.m3u
-          echo '#EXTINF:-1 tvg-id="" tvg-name="MBN 플러스" tvg-logo="https://i.postimg.cc/NFxKbbvJ/mbn-plus.png" group-title="韩国",MBN 플러스' >> temp.m3u
-          echo "$MBN_PLUS_URL" >> temp.m3u
-          tail -n +$((URL_LINE + 1)) kr.m3u >> temp.m3u
+          # 创建临时文件
+          cat > temp.m3u << EOF
+$(head -n "$URL_LINE" kr.m3u)
+#EXTINF:-1 tvg-id="" tvg-name="MBN 플러스" tvg-logo="https://i.postimg.cc/NFxKbbvJ/mbn-plus.png" group-title="韩国",MBN 플러스
+$MBN_PLUS_URL
+$(tail -n +$((URL_LINE + 1)) kr.m3u)
+EOF
           
           mv temp.m3u kr.m3u
           echo "成功添加MBN 플러斯频道"
@@ -110,7 +134,6 @@ jobs:
     - name: Check for changes
       id: check-changes
       run: |
-        git status
         if git diff --quiet kr.m3u; then
           echo "没有检测到变化"
           echo "has_changes=false" >> $GITHUB_OUTPUT
@@ -137,4 +160,4 @@ jobs:
       run: |
         echo "没有检测到需要提交的更改"
         echo "MBN URL: ${{ env.MBN_URL }}"
-        echo "MBN 플러스 URL: ${{ env.MBN_PLUS_URL }}"
+        echo "MBN 플러斯 URL: ${{ env.MBN_PLUS_URL }}"
