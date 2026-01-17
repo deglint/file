@@ -1,4 +1,4 @@
-name: Sync MBN and MBC M Channels
+name: Sync Korean TV Channels
 
 on:
   schedule:
@@ -52,20 +52,35 @@ jobs:
         echo "MBN URL: $MBN_URL"
         echo "MBN 플러스 URL: $MBN_PLUS_URL"
         
-    - name: Extract MBC M Info
-      id: extract-mbcm
+    - name: Extract Channel Info for MBC M, JTBC, JTBC2
+      id: extract-channel-info
       run: |
-        # 从koreatv.json提取MBC M信息
+        # 提取MBC M信息
         MBCM_URL=$(jq -r '.[] | select(.name=="MBC M") | (.uris[0] // .url)' koreatv.json 2>/dev/null || echo "")
         MBCM_LOGO=$(jq -r '.[] | select(.name=="MBC M") | .logo' koreatv.json 2>/dev/null || echo "")
         
-        # 从koreatvEPG.xml提取MBC M的频道ID
-        # 查找包含MBC M的channel元素并提取id属性
+        # 提取JTBC信息
+        JTBC_URL=$(jq -r '.[] | select(.name=="JTBC") | (.uris[0] // .url)' koreatv.json 2>/dev/null || echo "")
+        JTBC_LOGO=$(jq -r '.[] | select(.name=="JTBC") | .logo' koreatv.json 2>/dev/null || echo "")
+        
+        # 提取JTBC2信息
+        JTBC2_URL=$(jq -r '.[] | select(.name=="JTBC2") | (.uris[0] // .url)' koreatv.json 2>/dev/null || echo "")
+        JTBC2_LOGO=$(jq -r '.[] | select(.name=="JTBC2") | .logo' koreatv.json 2>/dev/null || echo "")
+        
+        # 从koreatvEPG.xml提取频道ID
         if [ -f koreatvEPG.xml ]; then
-          # 使用grep和sed提取频道ID
+          # 提取MBC M频道ID
           MBCM_CHANNEL_ID=$(grep -A 1 '<channel id=' koreatvEPG.xml | grep -B 1 'MBC M' | grep 'channel id=' | sed -n 's/.*channel id="\([^"]*\)".*/\1/p' | head -1)
+          
+          # 提取JTBC频道ID
+          JTBC_CHANNEL_ID=$(grep -A 1 '<channel id=' koreatvEPG.xml | grep -B 1 'JTBC' | grep 'channel id=' | grep -v 'JTBC2' | sed -n 's/.*channel id="\([^"]*\)".*/\1/p' | head -1)
+          
+          # 提取JTBC2频道ID
+          JTBC2_CHANNEL_ID=$(grep -A 1 '<channel id=' koreatvEPG.xml | grep -B 1 'JTBC2' | grep 'channel id=' | sed -n 's/.*channel id="\([^"]*\)".*/\1/p' | head -1)
         else
           MBCM_CHANNEL_ID=""
+          JTBC_CHANNEL_ID=""
+          JTBC2_CHANNEL_ID=""
         fi
         
         # 如果没找到，使用默认值
@@ -74,22 +89,49 @@ jobs:
           MBCM_CHANNEL_ID="624.lg"
         fi
         
+        if [ -z "$JTBC_CHANNEL_ID" ]; then
+          echo "警告: 未在EPG中找到JTBC频道ID，使用默认值"
+          JTBC_CHANNEL_ID="007.tving"
+        fi
+        
+        if [ -z "$JTBC2_CHANNEL_ID" ]; then
+          echo "警告: 未在EPG中找到JTBC2频道ID，使用默认值"
+          JTBC2_CHANNEL_ID="008.tving"
+        fi
+        
+        # 输出到环境变量
         echo "MBCM_URL=$MBCM_URL" >> $GITHUB_ENV
         echo "MBCM_LOGO=$MBCM_LOGO" >> $GITHUB_ENV
         echo "MBCM_CHANNEL_ID=$MBCM_CHANNEL_ID" >> $GITHUB_ENV
         
-        echo "MBC M 频道ID: $MBCM_CHANNEL_ID"
-        echo "MBC M Logo: $MBCM_LOGO"
-        echo "MBC M URL: $MBCM_URL"
+        echo "JTBC_URL=$JTBC_URL" >> $GITHUB_ENV
+        echo "JTBC_LOGO=$JTBC_LOGO" >> $GITHUB_ENV
+        echo "JTBC_CHANNEL_ID=$JTBC_CHANNEL_ID" >> $GITHUB_ENV
+        
+        echo "JTBC2_URL=$JTBC2_URL" >> $GITHUB_ENV
+        echo "JTBC2_LOGO=$JTBC2_LOGO" >> $GITHUB_ENV
+        echo "JTBC2_CHANNEL_ID=$JTBC2_CHANNEL_ID" >> $GITHUB_ENV
+        
+        echo "频道信息提取完成:"
+        echo "MBC M: $MBCM_CHANNEL_ID, $MBCM_URL"
+        echo "JTBC: $JTBC_CHANNEL_ID, $JTBC_URL"
+        echo "JTBC2: $JTBC2_CHANNEL_ID, $JTBC2_URL"
         
     - name: Debug - Show kr.m3u content
       run: |
-        echo "显示kr.m3u文件内容:"
+        echo "显示kr.m3u文件内容相关频道:"
         echo "=========================================="
+        echo "MBN相关内容:"
         grep -A 1 -B 1 "MBN" kr.m3u || echo "未找到MBN相关内容"
         echo "=========================================="
-        echo -e "\n显示MBC M相关内容:"
+        echo -e "\nMBC M相关内容:"
         grep -A 1 -B 1 "MBC M" kr.m3u || echo "未找到MBC M相关内容"
+        echo "=========================================="
+        echo -e "\nJTBC相关内容:"
+        grep -A 1 -B 1 "JTBC" kr.m3u | grep -v "JTBC2" || echo "未找到JTBC相关内容"
+        echo "=========================================="
+        echo -e "\nJTBC2相关内容:"
+        grep -A 1 -B 1 "JTBC2" kr.m3u || echo "未找到JTBC2相关内容"
         echo "=========================================="
         
     - name: Update MBN channel
@@ -150,7 +192,7 @@ jobs:
         echo "更新后检查MBN 플러斯:"
         grep -A 1 "MBN 플러스" kr.m3u
         
-    - name: Add new MBN 플러스 channel
+    - name: Add new MBN 플러斯 channel
       if: steps.check-mbn-plus.outputs.exists == 'false' && env.MBN_PLUS_URL != '' && env.MBN_PLUS_URL != 'null'
       run: |
         echo "添加新的MBN 플러斯频道..."
@@ -175,20 +217,49 @@ jobs:
         echo "添加后检查MBN 플러斯:"
         grep -A 1 "MBN 플러斯" kr.m3u || echo "未找到MBN 플러斯"
         
-    - name: Check if MBC M exists
-      id: check-mbcm
+    - name: Check if channels exist
+      id: check-channels-exist
       run: |
-        echo "检查MBC M是否存在..."
-        if grep -q "MBC M" kr.m3u; then
+        echo "检查频道是否存在..."
+        
+        # 检查MBC M
+        if grep -q "#EXTINF.*MBC M" kr.m3u; then
           echo "找到MBC M频道"
-          echo "exists=true" >> $GITHUB_OUTPUT
+          echo "MBCM_EXISTS=true" >> $GITHUB_ENV
         else
           echo "未找到MBC M频道"
-          echo "exists=false" >> $GITHUB_OUTPUT
+          echo "MBCM_EXISTS=false" >> $GITHUB_ENV
+        fi
+        
+        # 检查JTBC
+        if grep -q "#EXTINF.*JTBC" kr.m3u && ! grep -q "#EXTINF.*JTBC2" kr.m3u; then
+          echo "找到JTBC频道"
+          echo "JTBC_EXISTS=true" >> $GITHUB_ENV
+        else
+          # 更精确的检查
+          if grep -A 1 "#EXTINF.*JTBC" kr.m3u | grep -q "JTBC2"; then
+            echo "未找到JTBC频道（只找到JTBC2）"
+            echo "JTBC_EXISTS=false" >> $GITHUB_ENV
+          elif grep -q "#EXTINF.*JTBC$" kr.m3u || grep -q '#EXTINF.*tvg-name="JTBC"' kr.m3u; then
+            echo "找到JTBC频道"
+            echo "JTBC_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "未找到JTBC频道"
+            echo "JTBC_EXISTS=false" >> $GITHUB_ENV
+          fi
+        fi
+        
+        # 检查JTBC2
+        if grep -q "#EXTINF.*JTBC2" kr.m3u; then
+          echo "找到JTBC2频道"
+          echo "JTBC2_EXISTS=true" >> $GITHUB_ENV
+        else
+          echo "未找到JTBC2频道"
+          echo "JTBC2_EXISTS=false" >> $GITHUB_ENV
         fi
         
     - name: Update existing MBC M channel
-      if: steps.check-mbcm.outputs.exists == 'true' && env.MBCM_URL != '' && env.MBCM_URL != 'null' && env.MBCM_CHANNEL_ID != '' && env.MBCM_LOGO != ''
+      if: env.MBCM_EXISTS == 'true' && env.MBCM_URL != '' && env.MBCM_URL != 'null' && env.MBCM_CHANNEL_ID != '' && env.MBCM_LOGO != ''
       run: |
         echo "更新现有的MBC M频道..."
         echo "MBC M 频道ID: $MBCM_CHANNEL_ID"
@@ -214,7 +285,7 @@ jobs:
         grep -A 1 "MBC M" kr.m3u
         
     - name: Add new MBC M channel
-      if: steps.check-mbcm.outputs.exists == 'false' && env.MBCM_URL != '' && env.MBCM_URL != 'null' && env.MBCM_CHANNEL_ID != '' && env.MBCM_LOGO != ''
+      if: env.MBCM_EXISTS == 'false' && env.MBCM_URL != '' && env.MBCM_URL != 'null' && env.MBCM_CHANNEL_ID != '' && env.MBCM_LOGO != ''
       run: |
         echo "添加新的MBC M频道..."
         echo "MBC M 频道ID: $MBCM_CHANNEL_ID"
@@ -228,6 +299,90 @@ jobs:
         
         echo "添加后检查MBC M:"
         tail -3 kr.m3u || echo "未找到MBC M"
+        
+    - name: Update existing JTBC channel
+      if: env.JTBC_EXISTS == 'true' && env.JTBC_URL != '' && env.JTBC_URL != 'null' && env.JTBC_CHANNEL_ID != '' && env.JTBC_LOGO != ''
+      run: |
+        echo "更新现有的JTBC频道..."
+        echo "JTBC 频道ID: $JTBC_CHANNEL_ID"
+        echo "JTBC Logo: $JTBC_LOGO"
+        echo "JTBC URL: $JTBC_URL"
+        
+        # 备份原始文件
+        cp kr.m3u kr.m3u.bak
+        
+        # 使用awk更新JTBC频道（确保不匹配JTBC2）
+        awk -v channel_id="$JTBC_CHANNEL_ID" -v logo="$JTBC_LOGO" -v url="$JTBC_URL" '
+        /#EXTINF.*JTBC/ && !/JTBC2/ {
+            # 更新EXTINF行，使用新的频道ID和logo
+            print "#EXTINF:-1 tvg-id=\"" channel_id "\" tvg-logo=\"" logo "\",JTBC"
+            getline  # 获取下一行（URL）
+            print url  # 更新URL
+            next
+        }
+        {print}
+        ' kr.m3u.bak > kr.m3u
+        
+        echo "更新后检查JTBC:"
+        grep -A 1 "JTBC" kr.m3u | grep -v "JTBC2"
+        
+    - name: Add new JTBC channel
+      if: env.JTBC_EXISTS == 'false' && env.JTBC_URL != '' && env.JTBC_URL != 'null' && env.JTBC_CHANNEL_ID != '' && env.JTBC_LOGO != ''
+      run: |
+        echo "添加新的JTBC频道..."
+        echo "JTBC 频道ID: $JTBC_CHANNEL_ID"
+        echo "JTBC Logo: $JTBC_LOGO"
+        echo "JTBC URL: $JTBC_URL"
+        
+        # 在文件末尾添加JTBC频道
+        echo "" >> kr.m3u  # 确保新行
+        echo "#EXTINF:-1 tvg-id=\"$JTBC_CHANNEL_ID\" tvg-logo=\"$JTBC_LOGO\",JTBC" >> kr.m3u
+        echo "$JTBC_URL" >> kr.m3u
+        
+        echo "添加后检查JTBC:"
+        tail -3 kr.m3u | grep -A 1 "JTBC" || echo "未找到JTBC"
+        
+    - name: Update existing JTBC2 channel
+      if: env.JTBC2_EXISTS == 'true' && env.JTBC2_URL != '' && env.JTBC2_URL != 'null' && env.JTBC2_CHANNEL_ID != '' && env.JTBC2_LOGO != ''
+      run: |
+        echo "更新现有的JTBC2频道..."
+        echo "JTBC2 频道ID: $JTBC2_CHANNEL_ID"
+        echo "JTBC2 Logo: $JTBC2_LOGO"
+        echo "JTBC2 URL: $JTBC2_URL"
+        
+        # 备份原始文件
+        cp kr.m3u kr.m3u.bak
+        
+        # 使用awk更新JTBC2频道
+        awk -v channel_id="$JTBC2_CHANNEL_ID" -v logo="$JTBC2_LOGO" -v url="$JTBC2_URL" '
+        /#EXTINF.*JTBC2/ {
+            # 更新EXTINF行，使用新的频道ID和logo
+            print "#EXTINF:-1 tvg-id=\"" channel_id "\" tvg-logo=\"" logo "\",JTBC2"
+            getline  # 获取下一行（URL）
+            print url  # 更新URL
+            next
+        }
+        {print}
+        ' kr.m3u.bak > kr.m3u
+        
+        echo "更新后检查JTBC2:"
+        grep -A 1 "JTBC2" kr.m3u
+        
+    - name: Add new JTBC2 channel
+      if: env.JTBC2_EXISTS == 'false' && env.JTBC2_URL != '' && env.JTBC2_URL != 'null' && env.JTBC2_CHANNEL_ID != '' && env.JTBC2_LOGO != ''
+      run: |
+        echo "添加新的JTBC2频道..."
+        echo "JTBC2 频道ID: $JTBC2_CHANNEL_ID"
+        echo "JTBC2 Logo: $JTBC2_LOGO"
+        echo "JTBC2 URL: $JTBC2_URL"
+        
+        # 在文件末尾添加JTBC2频道
+        echo "" >> kr.m3u  # 确保新行
+        echo "#EXTINF:-1 tvg-id=\"$JTBC2_CHANNEL_ID\" tvg-logo=\"$JTBC2_LOGO\",JTBC2" >> kr.m3u
+        echo "$JTBC2_URL" >> kr.m3u
+        
+        echo "添加后检查JTBC2:"
+        tail -3 kr.m3u | grep -A 1 "JTBC2" || echo "未找到JTBC2"
         
     - name: Check for changes
       id: check-changes
@@ -254,7 +409,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         
         git add kr.m3u
-        git commit -m "自动更新: MBN和MBC M频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
+        git commit -m "自动更新: MBN, MBC M, JTBC, JTBC2频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
         
         git push origin main
         
@@ -270,13 +425,22 @@ jobs:
         echo "当前URL:"
         echo "MBN URL: ${{ env.MBN_URL }}"
         echo "MBN 플러斯 URL: ${{ env.MBN_PLUS_URL }}"
-        echo "MBC M 频道ID: ${{ env.MBCM_CHANNEL_ID }}"
-        echo "MBC M URL: ${{ env.MBCM_URL }}"
+        echo "MBC M 频道ID: ${{ env.MBCM_CHANNEL_ID }}, URL: ${{ env.MBCM_URL }}"
+        echo "JTBC 频道ID: ${{ env.JTBC_CHANNEL_ID }}, URL: ${{ env.JTBC_URL }}"
+        echo "JTBC2 频道ID: ${{ env.JTBC2_CHANNEL_ID }}, URL: ${{ env.JTBC2_URL }}"
         echo ""
         echo "文件当前状态:"
-        grep -A 1 "MBN" kr.m3u
+        echo "MBN:"
+        grep -A 1 "MBN" kr.m3u | grep -v "플러스" || echo "未找到MBN"
         echo ""
+        echo "MBC M:"
         grep -A 1 "MBC M" kr.m3u || echo "未找到MBC M"
+        echo ""
+        echo "JTBC:"
+        grep -A 1 "JTBC" kr.m3u | grep -v "JTBC2" || echo "未找到JTBC"
+        echo ""
+        echo "JTBC2:"
+        grep -A 1 "JTBC2" kr.m3u || echo "未找到JTBC2"
 
   # 清理旧的工作流运行
   cleanup-old-runs:
