@@ -23,63 +23,37 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0  # 获取完整历史，确保所有文件都被拉取
         
     - name: Debug - Show directory structure
       run: |
         echo "=== 当前目录结构 ==="
         pwd
-        echo -e "\n=== 根目录文件 ==="
         ls -la
-        echo -e "\n=== .github 目录 ==="
-        ls -la .github/ || echo ".github目录不存在"
-        echo -e "\n=== .github/scripts 目录 ==="
-        ls -la .github/scripts/ || echo ".github/scripts目录不存在"
-        echo -e "\n=== 查找sync_channels.py ==="
-        find . -name "sync_channels.py" -type f 2>/dev/null || echo "未找到sync_channels.py"
-        echo -e "\n=== 查找Python文件 ==="
-        find . -name "*.py" -type f 2>/dev/null || echo "未找到Python文件"
-        
-    - name: Create necessary directories if missing
-      run: |
-        echo "确保目录存在..."
-        mkdir -p .github/scripts
-        echo "目录结构:"
-        tree .github/ || echo "tree命令不可用，使用ls:"
-        ls -la .github/
-        ls -la .github/scripts/
+        echo -e "\n=== scripts目录 ==="
+        ls -la scripts/
+        echo -e "\n=== 查看配置文件 ==="
+        ls -la channels-config.yml && echo "配置文件存在" || echo "配置文件不存在"
         
     - name: Setup Python environment
       run: |
         python3 -m pip install --upgrade pip
         pip3 install pyyaml requests
         
-    - name: Create Python script if missing
+    - name: Fix Python script path if needed
       run: |
-        echo "检查Python脚本..."
-        if [ ! -f .github/scripts/sync_channels.py ]; then
-          echo "Python脚本不存在，创建中..."
-          cat > .github/scripts/sync_channels.py << 'EOF'
-#!/usr/bin/env python3
-"""
-韩国电视频道同步脚本 - 自动创建版本
-"""
-
-print("这是一个临时的Python脚本")
-print("请将完整的sync_channels.py脚本内容复制到这里")
-EOF
-          chmod +x .github/scripts/sync_channels.py
-          echo "已创建临时脚本"
+        echo "检查Python脚本位置..."
+        if [ -f scripts/sync_channels.py ]; then
+          echo "✓ 找到Python脚本: scripts/sync_channels.py"
+          head -5 scripts/sync_channels.py
         else
-          echo "Python脚本已存在"
-          head -20 .github/scripts/sync_channels.py
+          echo "✗ 在scripts/目录下未找到sync_channels.py"
+          find . -name "sync_channels.py" -type f 2>/dev/null
         fi
         
     - name: Run channel sync script
       run: |
         echo "开始执行频道同步脚本..."
-        cd /home/runner/work/file/file/  # 确保在正确目录
-        python3 .github/scripts/sync_channels.py
+        python3 scripts/sync_channels.py
         
     - name: Check for changes
       id: check-changes
