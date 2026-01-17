@@ -12,7 +12,7 @@ on:
 
 permissions:
   contents: write
-  actions: write  # 新增权限，用于删除工作流运行
+  actions: write
 
 jobs:
   sync-mbn-channels:
@@ -185,67 +185,109 @@ jobs:
         echo "文件当前状态:"
         grep -A 1 "MBN" kr.m3u
 
-  # 新增：清理旧的工作流运行
   cleanup-old-runs:
     runs-on: ubuntu-latest
-    needs: [sync-mbn-channels]  # 依赖于主job
-    if: always()  # 无论主job成功与否都运行
+    needs: [sync-mbn-channels]
+    if: always()
     
     steps:
-    - name: Install GitHub CLI
-      run: |
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-        sudo apt update
-        sudo apt install gh -y
-        
-    - name: Cleanup old workflow runs
+    - name: Cleanup old workflow runs using API
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         echo "开始清理旧的工作流运行记录..."
+        echo "工作流名称: Sync MBN Channels"
+        echo "仓库: ${{ github.repository }}"
         
-        # 获取当前工作流的所有运行记录ID（按创建时间倒序）
+        # 设置要保留的运行数量
+        KEEP_COUNT=3
+        echo "将保留最近的 $KEEP_COUNT 次运行"
+        
+        # 获取当前工作流的所有运行记录（使用GitHub API）
         echo "获取运行记录列表..."
-        run_ids=$(gh run list --workflow="${{ github.workflow }}" --repo="${{ github.repository }}" --limit 100 --json databaseId,status,createdAt --jq '.[].databaseId' 2>/dev/null || echo "")
         
-        if [ -z "$run_ids" ]; then
-          echo "无法获取运行记录列表或列表为空"
+        # 首先获取工作流ID
+        WORKFLOW_NAME="Sync MBN Channels"
+        echo "尝试获取工作流ID..."
+        
+        # 获取工作流ID（通过工作流名称）
+        WORKFLOW_INFO=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows")
+        
+        # 查找对应的工作流ID
+        WORKFLOW_ID=$(echo "$WORKFLOW_INFO" | jq -r '.workflows[] | select(.name=="'"$WORKFLOW_NAME"'") | .id')
+        
+        if [ -z "$WORKFLOW_ID" ] || [ "$WORKFLOW_ID" = "null" ]; then
+          echo "无法获取工作流ID，使用默认值"
+          # 尝试从环境变量获取
+          WORKFLOW_ID="${{ github.workflow_id }}"
+        fi
+        
+        echo "工作流ID: $WORKFLOW_ID"
+        
+        if [ -z "$WORKFLOW_ID" ] || [ "$WORKFLOW_ID" = "null" ]; then
+          echo "❌ 无法获取工作流ID，跳过清理"
+          exit 0
+        fi
+        
+        # 获取运行记录
+        RUNS_JSON=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/workflows/$WORKFLOW_ID/runs?per_page=100&status=completed")
+        
+        # 检查是否获取成功
+        if [ -z "$RUNS_JSON" ]; then
+          echo "❌ 无法获取运行记录"
+          exit 0
+        fi
+        
+        # 提取运行记录ID列表
+        RUN_IDS=$(echo "$RUNS_JSON" | jq -r '.workflow_runs[].id' 2>/dev/null || echo "")
+        
+        if [ -z "$RUN_IDS" ]; then
+          echo "没有找到运行记录"
           exit 0
         fi
         
         # 统计运行记录数量
-        count=$(echo "$run_ids" | wc -l)
-        echo "找到 $count 个运行记录"
+        RUN_COUNT=$(echo "$RUN_IDS" | wc -l)
+        echo "找到 $RUN_COUNT 个运行记录"
         
-        # 设置要保留的数量
-        keep_count=3
+        # 转换为数组
+        IFS=$'\n' read -r -d '' -a RUN_ID_ARRAY <<< "$RUN_IDS"
         
-        if [ $count -le $keep_count ]; then
-          echo "运行记录数量 ($count) 小于或等于要保留的数量 ($keep_count)，跳过清理"
+        if [ ${#RUN_ID_ARRAY[@]} -le $KEEP_COUNT ]; then
+          echo "运行记录数量 (${#RUN_ID_ARRAY[@]}) 小于或等于要保留的数量 ($KEEP_COUNT)，跳过清理"
           exit 0
         fi
         
-        echo "保留最近的 $keep_count 个运行记录，删除其余的..."
+        echo "将删除 ${#RUN_ID_ARRAY[@]} - $KEEP_COUNT = $(( ${#RUN_ID_ARRAY[@]} - $KEEP_COUNT )) 个旧运行记录"
         
-        # 转换为数组
-        readarray -t run_id_array <<< "$run_ids"
-        
-        # 遍历并删除旧记录
-        for ((i=0; i<${#run_id_array[@]}; i++)); do
-          run_id="${run_id_array[$i]}"
-          
-          # 保留前keep_count个（最近的）
-          if [ $i -ge $keep_count ]; then
-            echo "删除运行记录: $run_id"
-            if gh run delete "$run_id" --repo="${{ github.repository }}" --yes 2>/dev/null; then
-              echo "成功删除运行记录: $run_id"
+        # 删除旧的运行记录（保留最近的KEEP_COUNT个）
+        DELETED_COUNT=0
+        for i in "${!RUN_ID_ARRAY[@]}"; do
+          if [ $i -ge $KEEP_COUNT ]; then
+            RUN_ID="${RUN_ID_ARRAY[$i]}"
+            echo "删除运行记录 [$i]: $RUN_ID"
+            
+            # 删除运行记录
+            RESPONSE=$(curl -s -w "%{http_code}" -X DELETE \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID" \
+              -o /dev/null)
+            
+            if [ "$RESPONSE" = "204" ]; then
+              echo "✅ 成功删除运行记录: $RUN_ID"
+              DELETED_COUNT=$((DELETED_COUNT + 1))
             else
-              echo "删除运行记录失败: $run_id"
+              echo "❌ 删除失败 (HTTP $RESPONSE): $RUN_ID"
             fi
-          else
-            echo "保留运行记录: $run_id"
+            
+            # 避免速率限制，添加短暂延迟
+            sleep 0.5
           fi
         done
         
-        echo "清理完成"
+        echo "清理完成，删除了 $DELETED_COUNT 个旧运行记录"
