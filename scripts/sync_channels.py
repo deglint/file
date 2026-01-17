@@ -23,10 +23,28 @@ class ChannelSync:
     def load_config(self):
         """加载频道配置"""
         try:
-            with open('.github/channels-config.yml', 'r', encoding='utf-8') as f:
+            # 尝试多个可能的配置文件路径
+            config_paths = [
+                'channels-config.yml',  # 根目录
+                '.github/channels-config.yml'  # .github目录
+            ]
+            
+            config_path = None
+            for path in config_paths:
+                if os.path.exists(path):
+                    config_path = path
+                    break
+                    
+            if not config_path:
+                print("✗ 找不到配置文件，尝试路径:")
+                for path in config_paths:
+                    print(f"  - {path}")
+                return False
+                
+            with open(config_path, 'r', encoding='utf-8') as f:
                 config = yaml.safe_load(f)
                 self.channels_config = config.get('channels', [])
-            print(f"✓ 加载了 {len(self.channels_config)} 个频道配置")
+            print(f"✓ 从 {config_path} 加载了 {len(self.channels_config)} 个频道配置")
             return True
         except Exception as e:
             print(f"✗ 加载配置失败: {e}")
@@ -59,7 +77,8 @@ class ChannelSync:
             self.koreatv_epg = ""
         
         # 3. 获取备用源（如果需要）
-        if any(channel.get('backup_source', False) for channel in self.channels_config):
+        need_backup = any(channel.get('backup_source', False) for channel in self.channels_config)
+        if need_backup:
             try:
                 response = requests.get(
                     'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/kr.m3u',
@@ -207,8 +226,12 @@ class ChannelSync:
         """更新kr.m3u文件"""
         try:
             # 读取现有文件
-            with open('kr.m3u', 'r', encoding='utf-8') as f:
-                content = f.read()
+            if not os.path.exists('kr.m3u'):
+                print("ℹ kr.m3u文件不存在，创建新文件")
+                content = "#EXTM3U\n"
+            else:
+                with open('kr.m3u', 'r', encoding='utf-8') as f:
+                    content = f.read()
             
             # 去除重复频道
             lines = content.split('\n')
@@ -309,6 +332,10 @@ class ChannelSync:
             
             final_content = '\n'.join(final_cleaned).strip()
             
+            # 确保以EXTM3U开头
+            if not final_content.startswith('#EXTM3U'):
+                final_content = '#EXTM3U\n' + final_content
+            
             # 写入文件
             with open('kr.m3u', 'w', encoding='utf-8') as f:
                 f.write(final_content)
@@ -318,6 +345,8 @@ class ChannelSync:
             
         except Exception as e:
             print(f"✗ 更新m3u文件失败: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def run(self):
@@ -339,7 +368,7 @@ class ChannelSync:
         # 4. 统计
         success_count = sum(1 for c in channel_results if c['success'])
         print(f"\n" + "=" * 60)
-        print(f"处理完成: {success_count}/{len(channel_results)} 个频道成功")
+        print(f"处理完成: {success_count}/{len(self.channels_config)} 个频道成功")
         
         # 5. 更新文件
         if success_count > 0:
