@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write  # 新增权限，用于删除工作流运行
 
 jobs:
   sync-mbn-channels:
@@ -183,3 +184,68 @@ jobs:
         echo ""
         echo "文件当前状态:"
         grep -A 1 "MBN" kr.m3u
+
+  # 新增：清理旧的工作流运行
+  cleanup-old-runs:
+    runs-on: ubuntu-latest
+    needs: [sync-mbn-channels]  # 依赖于主job
+    if: always()  # 无论主job成功与否都运行
+    
+    steps:
+    - name: Install GitHub CLI
+      run: |
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt update
+        sudo apt install gh -y
+        
+    - name: Cleanup old workflow runs
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "开始清理旧的工作流运行记录..."
+        
+        # 获取当前工作流的所有运行记录ID（按创建时间倒序）
+        echo "获取运行记录列表..."
+        run_ids=$(gh run list --workflow="${{ github.workflow }}" --repo="${{ github.repository }}" --limit 100 --json databaseId,status,createdAt --jq '.[].databaseId' 2>/dev/null || echo "")
+        
+        if [ -z "$run_ids" ]; then
+          echo "无法获取运行记录列表或列表为空"
+          exit 0
+        fi
+        
+        # 统计运行记录数量
+        count=$(echo "$run_ids" | wc -l)
+        echo "找到 $count 个运行记录"
+        
+        # 设置要保留的数量
+        keep_count=3
+        
+        if [ $count -le $keep_count ]; then
+          echo "运行记录数量 ($count) 小于或等于要保留的数量 ($keep_count)，跳过清理"
+          exit 0
+        fi
+        
+        echo "保留最近的 $keep_count 个运行记录，删除其余的..."
+        
+        # 转换为数组
+        readarray -t run_id_array <<< "$run_ids"
+        
+        # 遍历并删除旧记录
+        for ((i=0; i<${#run_id_array[@]}; i++)); do
+          run_id="${run_id_array[$i]}"
+          
+          # 保留前keep_count个（最近的）
+          if [ $i -ge $keep_count ]; then
+            echo "删除运行记录: $run_id"
+            if gh run delete "$run_id" --repo="${{ github.repository }}" --yes 2>/dev/null; then
+              echo "成功删除运行记录: $run_id"
+            else
+              echo "删除运行记录失败: $run_id"
+            fi
+          else
+            echo "保留运行记录: $run_id"
+          fi
+        done
+        
+        echo "清理完成"
