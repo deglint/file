@@ -1,0 +1,49 @@
+# 频道同步配置
+channels:
+  # MBN系列
+  - name: "MBN"
+    json_match: "MBN"
+    epg_match: "MBN"
+    default_id: ""
+    backup_source: false  # 不需要备用源
+  
+  - name: "MBN 플러스"
+    json_match: "MBN 플러스"
+    epg_match: "MBN 플러스"
+    default_id: ""
+    backup_source: false
+    
+  # MBC系列
+  - name: "MBC M"
+    json_match: "MBC M"
+    epg_match: "MBC M"
+    default_id: "624.lg"
+    backup_source: false
+    
+  # JTBC系列
+  - name: "JTBC"
+    json_match: "JTBC"
+    epg_match: "JTBC"
+    default_id: "007.tving"
+    backup_source: false
+    
+  - name: "JTBC2"
+    json_match: "JTBC2"
+    epg_match: "JTBC2"
+    default_id: "008.tving"
+    backup_source: false
+    
+  # TV조선系列 - 需要备用源
+  - name: "TV조선"
+    json_match: "TV조선"
+    epg_match: "TV조선"
+    default_id: "TVCHOSUN.kr"
+    backup_source: true
+    backup_match: "TV조선"
+    
+  - name: "TV조선 2"
+    json_match: "TV조선 2"
+    epg_match: "TV조선 2"
+    default_id: "TVCHOSUN2.kr"
+    backup_source: true
+    backup_match: "TV조선2"
