@@ -19,6 +19,13 @@ channels:
     epg_match: "MBC M"
     default_id: "624.lg"
     backup_source: false
+
+  # KBS系列
+  - name: "KBS1"
+    json_match: "KBS1"
+    epg_match: "KBS1"
+    default_id: "501.lg"
+    backup_source: false
     
   # JTBC系列
   - name: "JTBC"
@@ -46,4 +53,5 @@ channels:
     epg_match: "TV조선 2"
     default_id: "TVCHOSUN2.kr"
     backup_source: true
+
     backup_match: "TV조선2"
