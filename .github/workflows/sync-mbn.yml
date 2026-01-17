@@ -1,4 +1,4 @@
-name: Sync MBN Channels
+name: Sync MBN and MBC M Channels
 
 on:
   schedule:
@@ -8,14 +8,14 @@ on:
       reason:
         description: '手动触发的理由'
         required: false
-        default: '手动更新MBN频道'
+        default: '手动更新频道链接'
 
 permissions:
   contents: write
   actions: write
 
 jobs:
-  sync-mbn-channels:
+  sync-channels:
     runs-on: ubuntu-latest
     
     steps:
@@ -33,6 +33,10 @@ jobs:
       run: |
         curl -s -o koreatv.json https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatv.json
         
+    - name: Fetch KoreaTV EPG XML data
+      run: |
+        curl -s -o koreatvEPG.xml https://raw.githubusercontent.com/kenpark76/kenpark76.github.io/refs/heads/main/koreatvEPG.xml
+        
     - name: Extract MBN URLs
       id: extract-urls
       run: |
@@ -48,14 +52,45 @@ jobs:
         echo "MBN URL: $MBN_URL"
         echo "MBN 플러스 URL: $MBN_PLUS_URL"
         
+    - name: Extract MBC M Info
+      id: extract-mbcm
+      run: |
+        # 从koreatv.json提取MBC M信息
+        MBCM_URL=$(jq -r '.[] | select(.name=="MBC M") | (.uris[0] // .url)' koreatv.json 2>/dev/null || echo "")
+        MBCM_LOGO=$(jq -r '.[] | select(.name=="MBC M") | .logo' koreatv.json 2>/dev/null || echo "")
+        
+        # 从koreatvEPG.xml提取MBC M的频道ID
+        # 查找包含MBC M的channel元素并提取id属性
+        if [ -f koreatvEPG.xml ]; then
+          # 使用grep和sed提取频道ID
+          MBCM_CHANNEL_ID=$(grep -A 1 '<channel id=' koreatvEPG.xml | grep -B 1 'MBC M' | grep 'channel id=' | sed -n 's/.*channel id="\([^"]*\)".*/\1/p' | head -1)
+        else
+          MBCM_CHANNEL_ID=""
+        fi
+        
+        # 如果没找到，使用默认值
+        if [ -z "$MBCM_CHANNEL_ID" ]; then
+          echo "警告: 未在EPG中找到MBC M频道ID，使用默认值"
+          MBCM_CHANNEL_ID="624.lg"
+        fi
+        
+        echo "MBCM_URL=$MBCM_URL" >> $GITHUB_ENV
+        echo "MBCM_LOGO=$MBCM_LOGO" >> $GITHUB_ENV
+        echo "MBCM_CHANNEL_ID=$MBCM_CHANNEL_ID" >> $GITHUB_ENV
+        
+        echo "MBC M 频道ID: $MBCM_CHANNEL_ID"
+        echo "MBC M Logo: $MBCM_LOGO"
+        echo "MBC M URL: $MBCM_URL"
+        
     - name: Debug - Show kr.m3u content
       run: |
         echo "显示kr.m3u文件内容:"
         echo "=========================================="
         grep -A 1 -B 1 "MBN" kr.m3u || echo "未找到MBN相关内容"
         echo "=========================================="
-        echo -e "\n显示文件前20行:"
-        head -20 kr.m3u
+        echo -e "\n显示MBC M相关内容:"
+        grep -A 1 -B 1 "MBC M" kr.m3u || echo "未找到MBC M相关内容"
+        echo "=========================================="
         
     - name: Update MBN channel
       if: env.MBN_URL != '' && env.MBN_URL != 'null'
@@ -138,7 +173,61 @@ jobs:
         ' kr.m3u.bak > kr.m3u
         
         echo "添加后检查MBN 플러斯:"
-        grep -A 1 "MBN 플러스" kr.m3u || echo "未找到MBN 플러斯"
+        grep -A 1 "MBN 플러斯" kr.m3u || echo "未找到MBN 플러斯"
+        
+    - name: Check if MBC M exists
+      id: check-mbcm
+      run: |
+        echo "检查MBC M是否存在..."
+        if grep -q "MBC M" kr.m3u; then
+          echo "找到MBC M频道"
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "未找到MBC M频道"
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Update existing MBC M channel
+      if: steps.check-mbcm.outputs.exists == 'true' && env.MBCM_URL != '' && env.MBCM_URL != 'null' && env.MBCM_CHANNEL_ID != '' && env.MBCM_LOGO != ''
+      run: |
+        echo "更新现有的MBC M频道..."
+        echo "MBC M 频道ID: $MBCM_CHANNEL_ID"
+        echo "MBC M Logo: $MBCM_LOGO"
+        echo "MBC M URL: $MBCM_URL"
+        
+        # 备份原始文件
+        cp kr.m3u kr.m3u.bak
+        
+        # 使用awk更新MBC M频道
+        awk -v channel_id="$MBCM_CHANNEL_ID" -v logo="$MBCM_LOGO" -v url="$MBCM_URL" '
+        /#EXTINF.*MBC M/ {
+            # 更新EXTINF行，使用新的频道ID和logo
+            print "#EXTINF:-1 tvg-id=\"" channel_id "\" tvg-logo=\"" logo "\",MBC M"
+            getline  # 获取下一行（URL）
+            print url  # 更新URL
+            next
+        }
+        {print}
+        ' kr.m3u.bak > kr.m3u
+        
+        echo "更新后检查MBC M:"
+        grep -A 1 "MBC M" kr.m3u
+        
+    - name: Add new MBC M channel
+      if: steps.check-mbcm.outputs.exists == 'false' && env.MBCM_URL != '' && env.MBCM_URL != 'null' && env.MBCM_CHANNEL_ID != '' && env.MBCM_LOGO != ''
+      run: |
+        echo "添加新的MBC M频道..."
+        echo "MBC M 频道ID: $MBCM_CHANNEL_ID"
+        echo "MBC M Logo: $MBCM_LOGO"
+        echo "MBC M URL: $MBCM_URL"
+        
+        # 在文件末尾添加MBC M频道
+        echo "" >> kr.m3u  # 确保新行
+        echo "#EXTINF:-1 tvg-id=\"$MBCM_CHANNEL_ID\" tvg-logo=\"$MBCM_LOGO\",MBC M" >> kr.m3u
+        echo "$MBCM_URL" >> kr.m3u
+        
+        echo "添加后检查MBC M:"
+        tail -3 kr.m3u || echo "未找到MBC M"
         
     - name: Check for changes
       id: check-changes
@@ -165,7 +254,7 @@ jobs:
         git config --global user.name "github-actions[bot]"
         
         git add kr.m3u
-        git commit -m "自动更新: MBN和MBN 플러斯频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
+        git commit -m "自动更新: MBN和MBC M频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
         
         git push origin main
         
@@ -181,14 +270,18 @@ jobs:
         echo "当前URL:"
         echo "MBN URL: ${{ env.MBN_URL }}"
         echo "MBN 플러斯 URL: ${{ env.MBN_PLUS_URL }}"
+        echo "MBC M 频道ID: ${{ env.MBCM_CHANNEL_ID }}"
+        echo "MBC M URL: ${{ env.MBCM_URL }}"
         echo ""
         echo "文件当前状态:"
         grep -A 1 "MBN" kr.m3u
+        echo ""
+        grep -A 1 "MBC M" kr.m3u || echo "未找到MBC M"
 
-  # 使用GitHub官方脚本清理旧运行记录
+  # 清理旧的工作流运行
   cleanup-old-runs:
     runs-on: ubuntu-latest
-    needs: [sync-mbn-channels]
+    needs: [sync-channels]
     if: always()
     
     steps:
