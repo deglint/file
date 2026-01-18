@@ -1,16 +1,31 @@
 # 频道同步配置
 channels:
+  # TV조선系列
+  - name: "TV조선"
+    json_match: "TV CHOSUN"
+    epg_match: "TV CHOSUN"
+    default_id: "C01581.tving"
+    backup_source: true  # 需要备用源
+    backup_match: "TV Chosun (720p)"
+    
+  - name: "TV조선 2"
+    json_match: "TV CHOSUN 2"
+    epg_match: "TV CHOSUN 2"
+    default_id: "C00585.tving"
+    backup_source: true
+    backup_match: "TV Chosun 2 (720p)"
+    
   # MBN系列
   - name: "MBN"
     json_match: "MBN"
     epg_match: "MBN"
-    default_id: ""
+    default_id: "C00708.tving"
     backup_source: false  # 不需要备用源
   
   - name: "MBN 플러스"
     json_match: "MBN 플러스"
     epg_match: "MBN 플러스"
-    default_id: ""
+    default_id: "C17142.tving"
     backup_source: false
 
   # JTBC系列
@@ -23,7 +38,7 @@ channels:
   - name: "JTBC2"
     json_match: "JTBC2"
     epg_match: "JTBC2"
-    default_id: "008.tving"
+    default_id: "C15741.tving"
     backup_source: false
     
   # MBC系列
@@ -36,8 +51,8 @@ channels:
   # SBS系列
   - name: "SBS KPOP"
     json_match: "SBS KPOP"
-    epg_match: "SBS KPOP"
-    default_id: "SBS KPOP"
+    epg_match: ""
+    default_id: ""
     backup_source: false
     
   # KBS系列
@@ -46,20 +61,3 @@ channels:
     epg_match: "KBS조이"
     default_id: "619.lg"
     backup_source: false
-    
-  # TV조선系列 - 需要备用源
-  - name: "TV조선"
-    json_match: "TV조선"
-    epg_match: "TV조선"
-    default_id: "TVCHOSUN.kr"
-    backup_source: true
-    backup_match: "TV조선"
-    
-  - name: "TV조선 2"
-    json_match: "TV조선 2"
-    epg_match: "TV조선 2"
-    default_id: "TVCHOSUN2.kr"
-    backup_source: true
-    backup_match: "TV조선2"
-
-
