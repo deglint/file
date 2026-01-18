@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-韩国电视频道同步脚本
-自动从多个源同步频道信息到kr.m3u文件
+韩国电视频道同步脚本 - 重建版本
+根据配置文件完全重建kr.m3u文件，确保频道顺序和内容与配置完全一致
 """
 
 import json
 import yaml
-import xml.etree.ElementTree as ET
 import requests
 import re
 import os
 import sys
 from urllib.parse import urlparse
+import difflib
 
 class ChannelSync:
     def __init__(self):
@@ -72,9 +72,14 @@ class ChannelSync:
             )
             self.koreatv_epg = response.text
             print("✓ 获取koreatvEPG.xml成功")
+            
+            # 预解析EPG中的所有频道，用于模糊匹配
+            self.parse_epg_channels()
+            
         except Exception as e:
             print(f"✗ 获取koreatvEPG.xml失败: {e}")
             self.koreatv_epg = ""
+            self.epg_channels = {}
         
         # 3. 获取备用源（如果需要）
         need_backup = any(channel.get('backup_source', False) for channel in self.channels_config)
@@ -92,25 +97,91 @@ class ChannelSync:
         else:
             print("ℹ 没有频道需要备用源，跳过获取")
     
+    def parse_epg_channels(self):
+        """解析EPG中的所有频道，用于快速查找"""
+        self.epg_channels = {}
+        
+        if not self.koreatv_epg:
+            return
+        
+        # 查找所有channel元素
+        pattern = r'<channel id="([^"]+)"[^>]*>\s*<display-name>([^<]+)</display-name>'
+        matches = re.findall(pattern, self.koreatv_epg)
+        
+        for channel_id, display_name in matches:
+            self.epg_channels[display_name.strip()] = channel_id
+        
+        print(f"✓ 从EPG中解析了 {len(self.epg_channels)} 个频道")
+    
+    def find_channel_id(self, epg_match):
+        """智能查找频道ID"""
+        if not self.epg_channels:
+            return None
+        
+        # 1. 精确匹配
+        if epg_match in self.epg_channels:
+            return self.epg_channels[epg_match]
+        
+        # 2. 尝试去除空格匹配（如"KBS1"匹配"KBS 1TV"）
+        simplified_epg_match = epg_match.replace(' ', '')
+        for epg_name, channel_id in self.epg_channels.items():
+            if epg_name.replace(' ', '') == simplified_epg_match:
+                print(f"  注意: 通过去除空格匹配: '{epg_match}' -> '{epg_name}'")
+                return channel_id
+        
+        # 3. 模糊匹配（使用difflib）
+        epg_names = list(self.epg_channels.keys())
+        matches = difflib.get_close_matches(epg_match, epg_names, n=1, cutoff=0.6)
+        
+        if matches:
+            matched_name = matches[0]
+            similarity = difflib.SequenceMatcher(None, epg_match, matched_name).ratio()
+            print(f"  注意: 使用模糊匹配: '{epg_match}' -> '{matched_name}' (相似度: {similarity:.2f})")
+            return self.epg_channels[matched_name]
+        
+        # 4. 尝试部分匹配
+        for epg_name, channel_id in self.epg_channels.items():
+            if epg_match in epg_name or epg_name in epg_match:
+                print(f"  注意: 通过部分匹配: '{epg_match}' -> '{epg_name}'")
+                return channel_id
+        
+        return None
+    
     def extract_channel_id_from_epg(self, epg_match):
-        """从EPG XML中提取频道ID"""
+        """从EPG XML中提取频道ID（增强版）"""
         if not self.koreatv_epg:
             return None
         
+        # 首先尝试精确查找
+        channel_id = self.find_channel_id(epg_match)
+        
+        if channel_id:
+            return channel_id
+        
+        # 如果没找到，尝试正则表达式搜索
         try:
-            # 查找包含指定名称的channel元素
-            pattern = f'<channel id="([^"]+)"[^>]*>\\s*<display-name>{re.escape(epg_match)}</display-name>'
-            match = re.search(pattern, self.koreatv_epg)
+            # 尝试多种可能的格式
+            patterns = [
+                f'<channel id="([^"]+)"[^>]*>\\s*<display-name>{re.escape(epg_match)}</display-name>',
+                f'<channel id="([^"]+)">\\s*<display-name>{re.escape(epg_match)}</display-name>',
+                f'<channel id="([^"]+)".*?<display-name>{re.escape(epg_match)}</display-name>',
+            ]
+            
+            for pattern in patterns:
+                match = re.search(pattern, self.koreatv_epg)
+                if match:
+                    return match.group(1)
+            
+            # 如果还没找到，尝试不区分大小写
+            pattern = f'<channel id="([^"]+)".*?<display-name>{re.escape(epg_match)}</display-name>'
+            match = re.search(pattern, self.koreatv_epg, re.IGNORECASE)
             if match:
                 return match.group(1)
-            
-            # 尝试第二种模式
-            pattern = f'<channel id="([^"]+)">\\s*<display-name>{re.escape(epg_match)}</display-name>'
-            match = re.search(pattern, self.koreatv_epg)
-            return match.group(1) if match else None
+                
         except Exception as e:
             print(f"✗ 解析EPG失败 {epg_match}: {e}")
-            return None
+        
+        return None
     
     def extract_info_from_json(self, json_match):
         """从koreatv.json提取频道信息"""
@@ -176,7 +247,10 @@ class ChannelSync:
             channel_id = self.extract_channel_id_from_epg(epg_match)
             if not channel_id:
                 channel_id = default_id
-                print(f"  使用默认频道ID: {channel_id}")
+                if channel_id:
+                    print(f"  使用默认频道ID: {channel_id}")
+                else:
+                    print(f"  ⚠ 警告: 未找到频道ID，将使用空值")
             else:
                 print(f"  获取到频道ID: {channel_id}")
             
@@ -222,50 +296,21 @@ class ChannelSync:
         
         return channel_results
     
-    def update_m3u_file(self, channel_results):
-        """更新kr.m3u文件"""
+    def rebuild_m3u_file(self, channel_results):
+        """完全重建kr.m3u文件，确保顺序与配置一致"""
         try:
-            # 读取现有文件
-            if not os.path.exists('kr.m3u'):
-                print("ℹ kr.m3u文件不存在，创建新文件")
-                content = "#EXTM3U\n"
-            else:
-                with open('kr.m3u', 'r', encoding='utf-8') as f:
-                    content = f.read()
-            
-            # 去除重复频道
-            lines = content.split('\n')
-            cleaned_lines = []
-            seen_channels = set()
-            current_extinf = None
-            
-            for i, line in enumerate(lines):
-                if line.startswith('#EXTINF:'):
-                    # 提取频道名称
-                    match = re.search(r',([^,]+)$', line)
-                    if match:
-                        channel_name = match.group(1).strip()
-                        if channel_name in seen_channels:
-                            # 跳过这个重复频道
-                            current_extinf = 'skip'
-                            continue
-                        seen_channels.add(channel_name)
-                        current_extinf = channel_name
-                    cleaned_lines.append(line)
-                elif line.startswith('http'):
-                    if current_extinf == 'skip':
-                        # 跳过重复频道的URL
-                        current_extinf = None
-                        continue
-                    cleaned_lines.append(line)
-                    current_extinf = None
-                else:
-                    cleaned_lines.append(line)
+            print(f"\n开始重建kr.m3u文件...")
+            print(f"将包含 {len([c for c in channel_results if c['success']])} 个频道")
             
             # 构建新内容
-            new_content = '\n'.join(cleaned_lines).strip()
+            lines = []
             
-            # 为每个成功获取的频道添加或更新
+            # 添加文件头
+            lines.append("#EXTM3U")
+            lines.append("")
+            
+            # 按照配置文件顺序添加频道
+            added_count = 0
             for channel in channel_results:
                 if not channel['success']:
                     continue
@@ -276,75 +321,36 @@ class ChannelSync:
                 logo = channel['logo']
                 
                 # 构建EXTINF行
-                if logo:
+                if logo and logo != 'null':
                     extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}" tvg-logo="{logo}",{name}'
                 else:
                     extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}",{name}'
                 
-                # 检查是否已存在
-                pattern = f'#EXTINF:[^\\n]*,{re.escape(name)}\\n'
-                if re.search(pattern, new_content):
-                    # 更新现有频道
-                    new_content = re.sub(
-                        pattern,
-                        f'{extinf_line}\n',
-                        new_content
-                    )
-                    
-                    # 更新URL（下一行）
-                    url_pattern = f'(#EXTINF:[^\\n]*,{re.escape(name)})\\n[^\\n]*\\n'
-                    new_content = re.sub(
-                        url_pattern,
-                        f'{extinf_line}\n{url}\n',
-                        new_content
-                    )
-                    print(f"✓ 更新频道: {name}")
-                else:
-                    # 添加新频道
-                    new_content += f'\n\n{extinf_line}\n{url}'
-                    print(f"✓ 添加频道: {name}")
+                # 添加到文件
+                lines.append(extinf_line)
+                lines.append(url)
+                lines.append("")  # 添加空行分隔
+                
+                added_count += 1
+                print(f"✓ 添加频道到新文件: {name}")
             
-            # 再次清理可能的重复
-            final_lines = new_content.split('\n')
-            final_cleaned = []
-            seen_channels_final = set()
-            current_extinf_final = None
-            
-            for line in final_lines:
-                if line.startswith('#EXTINF:'):
-                    match = re.search(r',([^,]+)$', line)
-                    if match:
-                        channel_name = match.group(1).strip()
-                        if channel_name in seen_channels_final:
-                            current_extinf_final = 'skip'
-                            continue
-                        seen_channels_final.add(channel_name)
-                        current_extinf_final = channel_name
-                    final_cleaned.append(line)
-                elif line.startswith('http'):
-                    if current_extinf_final == 'skip':
-                        current_extinf_final = None
-                        continue
-                    final_cleaned.append(line)
-                    current_extinf_final = None
-                else:
-                    final_cleaned.append(line)
-            
-            final_content = '\n'.join(final_cleaned).strip()
-            
-            # 确保以EXTM3U开头
-            if not final_content.startswith('#EXTM3U'):
-                final_content = '#EXTM3U\n' + final_content
+            # 移除最后一个空行
+            if lines and lines[-1] == "":
+                lines.pop()
             
             # 写入文件
-            with open('kr.m3u', 'w', encoding='utf-8') as f:
-                f.write(final_content)
+            new_content = "\n".join(lines)
             
-            print(f"\n✓ 文件更新完成")
+            with open('kr.m3u', 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            
+            print(f"\n✓ 文件重建完成")
+            print(f"  成功添加了 {added_count} 个频道")
+            print(f"  频道顺序与配置文件完全一致")
             return True
             
         except Exception as e:
-            print(f"✗ 更新m3u文件失败: {e}")
+            print(f"✗ 重建m3u文件失败: {e}")
             import traceback
             traceback.print_exc()
             return False
@@ -352,7 +358,7 @@ class ChannelSync:
     def run(self):
         """主运行函数"""
         print("=" * 60)
-        print("韩国电视频道同步开始")
+        print("韩国电视频道同步 - 完全重建版")
         print("=" * 60)
         
         # 1. 加载配置
@@ -370,9 +376,9 @@ class ChannelSync:
         print(f"\n" + "=" * 60)
         print(f"处理完成: {success_count}/{len(self.channels_config)} 个频道成功")
         
-        # 5. 更新文件
+        # 5. 重建文件
         if success_count > 0:
-            return self.update_m3u_file(channel_results)
+            return self.rebuild_m3u_file(channel_results)
         else:
             print("✗ 没有成功获取任何频道信息，跳过更新")
             return False
