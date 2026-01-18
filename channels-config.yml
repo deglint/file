@@ -23,24 +23,24 @@ channels:
   # SBS系列
   - name: "SBS KPOP"
     json_match: "SBS KPOP"
-    epg_match: ""
-    default_id: ""
-    backup_source: false
-
-  # SBS系列
-  - name: "SBS KPOP"
-    json_match: "SBS KPOP"
-    epg_match: ""
+    epg_match: "SBS KPOP"
     default_id: ""
     backup_source: false
     
-  # KBSC系列
+  # KBS系列
   - name: "KBS조이"
     json_match: "KBS조이"
     epg_match: "KBS조이"
     default_id: "619.lg"
     backup_source: false
-    
+
+  # JTBC系列
+  - name: "JTBC"
+    json_match: "JTBC"
+    epg_match: "JTBC"
+    default_id: "C01582.tving"
+    backup_source: false
+  
   - name: "JTBC2"
     json_match: "JTBC2"
     epg_match: "JTBC2"
