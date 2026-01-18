@@ -20,18 +20,25 @@ channels:
     default_id: "624.lg"
     backup_source: false
 
-  # KBS系列
-  - name: "KBS1"
-    json_match: "KBS1"
-    epg_match: "KBS1"
-    default_id: "501.lg"
+  # SBS系列
+  - name: "SBS KPOP"
+    json_match: "SBS KPOP"
+    epg_match: ""
+    default_id: ""
+    backup_source: false
+
+  # SBS系列
+  - name: "SBS KPOP"
+    json_match: "SBS KPOP"
+    epg_match: ""
+    default_id: ""
     backup_source: false
     
-  # JTBC系列
-  - name: "JTBC"
-    json_match: "JTBC"
-    epg_match: "JTBC"
-    default_id: "007.tving"
+  # KBSC系列
+  - name: "KBS조이"
+    json_match: "KBS조이"
+    epg_match: "KBS조이"
+    default_id: "619.lg"
     backup_source: false
     
   - name: "JTBC2"
@@ -53,5 +60,4 @@ channels:
     epg_match: "TV조선 2"
     default_id: "TVCHOSUN2.kr"
     backup_source: true
-
     backup_match: "TV조선2"
