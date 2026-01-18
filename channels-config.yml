@@ -37,7 +37,7 @@ channels:
   - name: "SBS KPOP"
     json_match: "SBS KPOP"
     epg_match: "SBS KPOP"
-    default_id: ""
+    default_id: "SBS KPOP"
     backup_source: false
     
   # KBS系列
@@ -61,4 +61,5 @@ channels:
     default_id: "TVCHOSUN2.kr"
     backup_source: true
     backup_match: "TV조선2"
+
 
