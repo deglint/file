@@ -1,63 +1,72 @@
 # 频道同步配置
 channels:
-  # TV조선系列
+  # TV조선系列 - 음악分组
   - name: "TV조선"
     json_match: "TV CHOSUN"
+    group: "음악"
     epg_match: "TV CHOSUN"
     default_id: "C01581.tving"
     backup_source: true  # 需要备用源
     backup_match: "TV Chosun (720p)"
-    
+  
   - name: "TV조선 2"
-    json_match: "TV CHOSUN 2"
-    epg_match: "TV CHOSUN 2"
-    default_id: "C00585.tving"
+    json_match: "TV조선 2"
+    group: "음악"
+    epg_match: "TV조선 2"
+    default_id: "TVCHOSUN2.kr"
     backup_source: true
-    backup_match: "TV Chosun 2 (720p)"
+    backup_match: "TV조선2"
     
-  # MBN系列
+  # MBN系列 - 음악分组
   - name: "MBN"
     json_match: "MBN"
+    group: "음악"
     epg_match: "MBN"
-    default_id: "C00708.tving"
-    backup_source: false  # 不需要备用源
+    default_id: ""
+    backup_source: false
   
   - name: "MBN 플러스"
     json_match: "MBN 플러스"
+    group: "음악"
     epg_match: "MBN 플러스"
-    default_id: "C17142.tving"
-    backup_source: false
-
-  # JTBC系列
-  - name: "JTBC"
-    json_match: "JTBC"
-    epg_match: "JTBC"
-    default_id: "C01582.tving"
-    backup_source: false
-  
-  - name: "JTBC2"
-    json_match: "JTBC2"
-    epg_match: "JTBC2"
-    default_id: "C15741.tving"
-    backup_source: false
-    
-  # MBC系列
-  - name: "MBC M"
-    json_match: "MBC M"
-    epg_match: "MBC M"
-    default_id: "624.lg"
-    backup_source: false
-
-  # SBS系列
-  - name: "SBS KPOP"
-    json_match: "SBS KPOP"
-    epg_match: ""
     default_id: ""
     backup_source: false
     
-  # KBS系列
-  - name: "KBS조이"
-    json_match: "KBS조이"
-    epg_match: "KBS조이"
-    default_id: "619.lg"
+  # MBC系列 - 드라마分组
+  - name: "MBC M"
+    json_match: "MBC M"
+    group: "드라마"
+    epg_match: "MBC M"
+    default_id: "624.lg"
+    backup_source: false
+    
+  # JTBC系列 - 드라마分组  
+  - name: "JTBC"
+    json_match: "JTBC"
+    group: "드라마"
+    epg_match: "JTBC"
+    default_id: "007.tving"
+    backup_source: false
+    
+  - name: "JTBC2"
+    json_match: "JTBC2"
+    group: "뉴스"
+    epg_match: "JTBC2"
+    default_id: "008.tving"
+    backup_source: false
+    
+  # KBS系列 - 뉴스分组
+  - name: "KBS1"
+    json_match: "KBS1"
+    group: "뉴스"
+    epg_match: "KBS 1TV"
+    default_id: "501.lg"
+    backup_source: false
+    
+  # 经济频道分组
+  - name: "경제TV"
+    json_match: "경제TV"
+    group: "경제"
+    epg_match: "경제TV"
+    default_id: "ECON.kr"
     backup_source: false
