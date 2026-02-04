@@ -17,8 +17,14 @@ on:
       - 'channels-config.yml'
       - 'scripts/sync_channels.py'
 
+# 在工作流级别设置保留策略
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
+  actions: write  # 需要这个权限来清理工作流运行记录
 
 jobs:
   sync-channels:
@@ -146,25 +152,78 @@ jobs:
         echo "=== 跳过提交 ==="
         echo "文件内容未变化，跳过提交"
 
-    - name: Cleanup
+    - name: Cleanup temporary files
       if: always()
       run: |
         echo "=== 清理临时文件 ==="
         rm -f kr.m3u.bak
 
-  cleanup-workflow:
+  # 使用GitHub原生API清理工作流运行记录
+  cleanup-workflow-runs:
     needs: sync-channels
     runs-on: ubuntu-latest
     if: always()
     permissions:
       actions: write
-    
+      
     steps:
-    - name: Cleanup old workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
+    - name: Clean up old workflow runs
+      uses: actions/github-script@v7
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        repository: ${{ github.repository }}
-        retain_days: 1  # 保留1天内的运行记录
-        keep_minimum_runs: 3  # 至少保留3个运行记录
-        delete_workflow_pattern: ${{ github.workflow }}  # 只清理当前工作流的运行记录
+        script: |
+          // 获取当前工作流的所有运行记录
+          const { owner, repo } = context.repo;
+          const workflowId = context.workflow;
+          
+          console.log(`清理工作流运行记录: ${owner}/${repo} - ${workflowId}`);
+          
+          // 获取所有运行记录
+          const runs = await github.rest.actions.listWorkflowRunsForRepo({
+            owner,
+            repo,
+            workflow_id: workflowId,
+            status: 'completed',
+            per_page: 50
+          });
+          
+          console.log(`找到 ${runs.data.total_count} 个运行记录`);
+          
+          // 按创建时间排序（最新的在前）
+          const sortedRuns = runs.data.workflow_runs.sort((a, b) => 
+            new Date(b.created_at) - new Date(a.created_at)
+          );
+          
+          // 设置要保留的数量
+          const keepCount = 3;
+          
+          if (sortedRuns.length <= keepCount) {
+            console.log(`运行记录数量 (${sortedRuns.length}) 小于或等于保留数量 (${keepCount})，跳过清理`);
+            return;
+          }
+          
+          // 获取要删除的运行记录（跳过前keepCount个）
+          const runsToDelete = sortedRuns.slice(keepCount);
+          
+          console.log(`将删除 ${runsToDelete.length} 个运行记录`);
+          
+          // 删除旧的运行记录
+          let deletedCount = 0;
+          for (const run of runsToDelete) {
+            try {
+              console.log(`删除运行记录 #${run.id} (创建于: ${run.created_at}, 状态: ${run.conclusion})`);
+              await github.rest.actions.deleteWorkflowRun({
+                owner,
+                repo,
+                run_id: run.id
+              });
+              console.log(`✅ 成功删除运行记录 #${run.id}`);
+              deletedCount++;
+              
+              // 避免API速率限制，每次删除后稍作等待
+              await new Promise(resolve => setTimeout(resolve, 500));
+            } catch (error) {
+              console.log(`❌ 删除运行记录 #${run.id} 失败: ${error.message}`);
+            }
+          }
+          
+          console.log(`清理完成。删除了 ${deletedCount} 个运行记录，保留了最近的 ${keepCount} 个`);
