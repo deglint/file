@@ -165,5 +165,6 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         repository: ${{ github.repository }}
-        retain_days: 1
-        keep_minimum_runs: 3
+        retain_days: 1  # 保留1天内的运行记录
+        keep_minimum_runs: 3  # 至少保留3个运行记录
+        delete_workflow_pattern: ${{ github.workflow }}  # 只清理当前工作流的运行记录
