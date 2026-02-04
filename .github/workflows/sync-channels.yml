@@ -1,18 +1,24 @@
 name: Sync Korean TV Channels
 
 on:
+  # 每2小时自动运行一次
   schedule:
     - cron: '0 */2 * * *'
+  # 支持手动触发
   workflow_dispatch:
     inputs:
       reason:
         description: '手动触发的理由'
         required: false
         default: '手动更新频道链接'
+  # 当配置文件变更时触发
+  push:
+    paths:
+      - 'channels-config.yml'
+      - 'scripts/sync_channels.py'
 
 permissions:
   contents: write
-  actions: write
 
 jobs:
   sync-channels:
@@ -23,115 +29,141 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Setup Python environment
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+        cache: ''
+
+    - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
-        pip3 install pyyaml requests
-        
-    - name: Run channel sync script
+        pip install --upgrade pip
+        pip install pyyaml requests
+
+    - name: Run sync script
+      id: sync
       run: |
-        echo "开始执行频道同步脚本..."
-        python3 scripts/sync_channels.py
+        echo "=== 开始同步韩国电视频道 ==="
         
-    - name: Check for changes
-      id: check-changes
-      run: |
-        echo "检查文件变化..."
-        
-        # 检查kr.m3u文件是否有变化
-        if ! git diff --quiet kr.m3u; then
-          echo "检测到变化"
-          echo "has_changes=true" >> $GITHUB_OUTPUT
-          echo "变化详情:"
-          git diff kr.m3u
-        else
-          echo "没有检测到变化"
-          echo "has_changes=false" >> $GITHUB_OUTPUT
+        # 备份当前文件以便比较
+        if [ -f kr.m3u ]; then
+          cp kr.m3u kr.m3u.bak
+          echo "备份当前m3u文件"
         fi
         
-    - name: Commit and push changes
-      if: steps.check-changes.outputs.has_changes == 'true'
-      run: |
-        echo "提交更改..."
+        # 运行同步脚本
+        python scripts/sync_channels.py
         
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        
-        git add kr.m3u
-        git commit -m "自动更新: 韩国电视频道链接 $(date '+%Y-%m-%d %H:%M:%S')"
-        
-        git push origin main
-        
-    - name: No changes to commit
-      if: steps.check-changes.outputs.has_changes == 'false'
-      run: |
-        echo "没有检测到需要提交的更改"
-        echo "可能的原因:"
-        echo "1. 文件已经是最新状态"
-        echo "2. 更新操作失败"
-        echo "3. 所有频道信息都未变化"
+        # 检查新生成的文件
+        if [ -f kr.m3u ]; then
+          echo "✓ 脚本执行成功，生成kr.m3u文件"
+          
+          # 检查分组信息
+          echo "=== 分组信息统计 ==="
+          if grep -q "group-title" kr.m3u; then
+            GROUP_COUNT=$(grep -o 'group-title="[^"]*"' kr.m3u | sort | uniq | wc -l)
+            echo "发现 $GROUP_COUNT 个分组:"
+            grep -o 'group-title="[^"]*"' kr.m3u | sort | uniq -c
+            
+            echo "分组频道分布:"
+            CHANNELS=$(grep -c "^#EXTINF:" kr.m3u)
+            echo "总频道数: $CHANNELS"
+          else
+            echo "⚠ 警告: 生成的m3u文件中没有分组信息"
+          fi
+          
+          # 比较文件变化
+          if [ -f kr.m3u.bak ]; then
+            if cmp -s kr.m3u kr.m3u.bak; then
+              echo "=== 文件比较 ==="
+              echo "文件内容未变化"
+              echo "changed=false" >> $GITHUB_OUTPUT
+            else
+              echo "=== 文件比较 ==="
+              echo "检测到文件变化"
+              echo "changed=true" >> $GITHUB_OUTPUT
+              
+              # 显示简要差异
+              echo "差异摘要:"
+              echo "- 旧文件行数: $(wc -l < kr.m3u.bak)"
+              echo "- 新文件行数: $(wc -l < kr.m3u)"
+            fi
+          else
+            echo "没有旧文件，视为有变化"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "✗ 错误: 脚本未生成kr.m3u文件"
+          echo "changed=false" >> $GITHUB_OUTPUT
+        fi
 
-  cleanup-old-runs:
+    - name: Show generated m3u preview
+      if: always()
+      run: |
+        echo "=== 生成文件预览 ==="
+        if [ -f kr.m3u ]; then
+          echo "文件前10行:"
+          head -10 kr.m3u
+          echo ""
+          echo "文件后5行:"
+          tail -5 kr.m3u
+          echo ""
+          echo "分组统计:"
+          grep -o 'group-title="[^"]*"' kr.m3u 2>/dev/null | sort | uniq -c || echo "无分组信息"
+        fi
+
+    - name: Commit and push changes
+      if: steps.sync.outputs.changed == 'true'
+      run: |
+        echo "=== 提交变更 ==="
+        
+        # 配置Git
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # 添加文件
+        git add kr.m3u
+        
+        # 检查是否有变更
+        if git diff --cached --quiet; then
+          echo "没有检测到可提交的变更"
+        else
+          # 提交变更
+          git commit -m "auto-sync: update Korean TV channels with groups [skip ci]"
+          
+          # 推送
+          git pull --rebase origin main
+          git push origin main
+          
+          echo "✓ 变更已提交并推送"
+        fi
+
+    - name: No changes detected
+      if: steps.sync.outputs.changed == 'false'
+      run: |
+        echo "=== 跳过提交 ==="
+        echo "文件内容未变化，跳过提交"
+
+    - name: Cleanup
+      if: always()
+      run: |
+        echo "=== 清理临时文件 ==="
+        rm -f kr.m3u.bak
+
+  cleanup-workflow:
+    needs: sync-channels
     runs-on: ubuntu-latest
-    needs: [sync-channels]
     if: always()
+    permissions:
+      actions: write
     
     steps:
-    - name: Delete old workflow runs
-      uses: actions/github-script@v7
+    - name: Cleanup old workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
       with:
-        script: |
-          const { owner, repo } = context.repo;
-          const workflowName = context.workflow;
-          
-          console.log(`仓库: ${owner}/${repo}`);
-          console.log(`工作流: ${workflowName}`);
-          
-          // 获取当前工作流的所有运行记录
-          const runs = await github.rest.actions.listWorkflowRunsForRepo({
-            owner,
-            repo,
-            workflow_id: workflowName,
-            status: 'completed',
-            per_page: 100
-          });
-          
-          console.log(`找到 ${runs.data.total_count} 个运行记录`);
-          
-          // 设置要保留的数量
-          const keepCount = 3;
-          
-          if (runs.data.total_count <= keepCount) {
-            console.log(`运行记录数量 (${runs.data.total_count}) 小于或等于保留数量 (${keepCount})，跳过清理`);
-            return;
-          }
-          
-          // 按创建时间排序（最新的在前）
-          const sortedRuns = runs.data.workflow_runs.sort((a, b) => 
-            new Date(b.created_at) - new Date(a.created_at)
-          );
-          
-          // 获取要删除的运行记录（跳过前keepCount个）
-          const runsToDelete = sortedRuns.slice(keepCount);
-          
-          console.log(`将删除 ${runsToDelete.length} 个运行记录`);
-          
-          // 删除旧的运行记录
-          let deletedCount = 0;
-          for (const run of runsToDelete) {
-            try {
-              console.log(`删除运行记录 #${run.id} (创建于: ${run.created_at})`);
-              await github.rest.actions.deleteWorkflowRun({
-                owner,
-                repo,
-                run_id: run.id
-              });
-              console.log(`✅ 成功删除运行记录 #${run.id}`);
-              deletedCount++;
-            } catch (error) {
-              console.log(`❌ 删除运行记录 #${run.id} 失败: ${error.message}`);
-            }
-          }
-          
-          console.log(`清理完成。删除了 ${deletedCount} 个运行记录，保留了最近的 ${keepCount} 个`)
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 3
