@@ -12,8 +12,8 @@ channels:
   - name: "TV조선 2"
     json_match: "TV CHOSUN 2"
     group: "음악"
-    epg_match: "TV조선 2"
-    default_id: "TVCHOSUN2.kr"
+    epg_match: "TV CHOSUN 2"
+    default_id: "C00585.tving"
     backup_source: true
     backup_match: "TV조선2"
     
@@ -70,4 +70,5 @@ channels:
     epg_match: "경제TV"
     default_id: "ECON.kr"
     backup_source: false
+
 
