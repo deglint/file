@@ -10,7 +10,7 @@ channels:
     backup_match: "TV Chosun (720p)"
   
   - name: "TV조선 2"
-    json_match: "TV조선 2"
+    json_match: "TV CHOSUN 2"
     group: "음악"
     epg_match: "TV조선 2"
     default_id: "TVCHOSUN2.kr"
@@ -70,3 +70,4 @@ channels:
     epg_match: "경제TV"
     default_id: "ECON.kr"
     backup_source: false
+
