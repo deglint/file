@@ -1,6 +1,6 @@
 # 频道同步配置
 channels:
-  # TV조선系列 - 음악分组
+  # 음악分组
   - name: "TV조선"
     json_match: "TV CHOSUN"
     group: "음악"
@@ -17,7 +17,6 @@ channels:
     backup_source: true
     backup_match: "TV조선2"
     
-  # MBN系列 - 음악分组
   - name: "MBN"
     json_match: "MBN"
     group: "음악"
@@ -32,43 +31,71 @@ channels:
     default_id: ""
     backup_source: false
     
-  # MBC系列 - 드라마分组
-  - name: "MBC M"
-    json_match: "MBC M"
+  # 드라마分组
+  - name: "KBS드라마"
+    json_match: "KBS드라마"
     group: "드라마"
-    epg_match: "MBC M"
-    default_id: "624.lg"
+    epg_match: "KBS드라마"
+    default_id: "617.lg"
     backup_source: false
-    
-  # JTBC系列 - 드라마分组  
-  - name: "JTBC"
-    json_match: "JTBC"
+
+  - name: "MBC드라마넷"
+    json_match: "MBC드라마넷"
     group: "드라마"
-    epg_match: "JTBC"
-    default_id: "007.tving"
+    epg_match: "MBC드라마넷"
+    default_id: "621.lg"
     backup_source: false
     
-  - name: "JTBC2"
-    json_match: "JTBC2"
-    group: "뉴스"
-    epg_match: "JTBC2"
-    default_id: "008.tving"
+  - name: "tvN DRAMA"
+    json_match: "tvN DRAMA"
+    group: "드라마"
+    epg_match: "tvN DRAMA"
+    default_id: "C01143.tving"
     backup_source: false
     
-  # KBS系列 - 뉴스分组
+  # 뉴스分组
   - name: "KBS1"
     json_match: "KBS1"
     group: "뉴스"
     epg_match: "KBS 1TV"
     default_id: "501.lg"
     backup_source: false
+
+  - name: "KBS2"
+    json_match: "KBS2"
+    group: "뉴스"
+    epg_match: "KBS2"
+    default_id: "181.lg"
+    backup_source: false
+
+  - name: "KBS뉴스"
+    json_match: "KBS뉴스"
+    group: "뉴스"
+    epg_match: "KBS뉴스"
+    default_id: ""
+    backup_source: false
+
+  - name: "SBS"
+    json_match: "SBS"
+    group: "뉴스"
+    epg_match: "SBS"
+    default_id: "504.lg"
+    backup_source: false
+
+  - name: "MBC"
+    json_match: "MBC"
+    group: "뉴스"
+    epg_match: "MBC"
+    default_id: "503.lg"
+    backup_source: false
     
   # 经济频道分组
-  - name: "경제TV"
-    json_match: "경제TV"
+  - name: "SBS Biz"
+    json_match: "SBS Biz"
     group: "경제"
-    epg_match: "경제TV"
-    default_id: "ECON.kr"
+    epg_match: "SBS Biz"
+    default_id: "616.lg"
     backup_source: false
+
 
 
