@@ -1,3 +1,42 @@
+name: Sync Korean TV Channels
+
+on:
+  # 每天凌晨2点自动运行
+  schedule:
+    - cron: '0 2 * * *'
+  # 支持手动触发
+  workflow_dispatch:
+  # 当配置或脚本文件变更时触发
+  push:
+    paths:
+      - 'channels-config.yml'
+      - '.github/channels-config.yml'
+      - '.github/workflows/sync-channels.yml'
+
+jobs:
+  sync-channels:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install pyyaml requests
+
+    - name: Create Python script
+      run: |
+        cat > sync_channels.py << 'EOF'
 #!/usr/bin/env python3
 """
 韩国电视频道同步脚本 - 重建版本
@@ -412,3 +451,90 @@ if __name__ == '__main__':
     sync = ChannelSync()
     success = sync.run()
     sys.exit(0 if success else 1)
+EOF
+        chmod +x sync_channels.py
+
+    - name: Create example config file (if not exists)
+      run: |
+        if [ ! -f channels-config.yml ] && [ ! -f .github/channels-config.yml ]; then
+          echo "创建示例配置文件..."
+          mkdir -p .github
+          cat > .github/channels-config.yml << 'CONFIGEOF'
+# 韩国电视频道配置
+channels:
+  - name: "KBS 1TV"
+    json_match: "KBS 1TV"
+    epg_match: "KBS 1TV"
+    group: "KBS"
+    
+  - name: "KBS 2TV"
+    json_match: "KBS 2TV"
+    epg_match: "KBS 2TV"
+    group: "KBS"
+    
+  - name: "MBC TV"
+    json_match: "MBC TV"
+    epg_match: "MBC TV"
+    group: "지상파"
+    backup_source: true
+    
+  - name: "SBS TV"
+    json_match: "SBS TV"
+    epg_match: "SBS TV"
+    group: "지상파"
+    backup_source: true
+    backup_match: "SBS"
+    
+  - name: "JTBC"
+    json_match: "JTBC"
+    epg_match: "JTBC"
+    group: "케이블"
+    default_id: "JTBC.kr"
+CONFIGEOF
+          echo "示例配置文件已创建在 .github/channels-config.yml"
+        fi
+
+    - name: Run channel sync script
+      run: python sync_channels.py
+      continue-on-error: true  # 即使部分失败也继续，记录问题
+
+    - name: Show generated file
+      run: |
+        echo "生成的kr.m3u文件前20行:"
+        head -20 kr.m3u || echo "kr.m3u文件未生成"
+        
+        echo -e "\n频道统计:"
+        if [ -f kr.m3u ]; then
+          channel_count=$(grep -c "^#EXTINF:" kr.m3u)
+          echo "总频道数: $channel_count"
+          
+          echo -e "\n分组信息:"
+          grep "group-title=" kr.m3u | sed 's/.*group-title="\([^"]*\)".*/\1/' | sort | uniq -c
+        fi
+
+    - name: Upload kr.m3u as artifact (for debugging)
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: generated-m3u
+        path: kr.m3u
+        retention-days: 1
+
+    - name: Commit and push changes
+      if: success()
+      run: |
+        # 配置Git用户
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        
+        # 检查是否有变更
+        if git diff --quiet; then
+          echo "没有检测到变更，跳过提交"
+        else
+          # 添加并提交变更
+          git add kr.m3u
+          git commit -m "Auto-sync: 更新韩国电视频道列表 [skip ci]"
+          git push
+          
+          echo "变更已提交并推送"
+        fi
