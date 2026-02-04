@@ -17,12 +17,17 @@ jobs:
   sync-channels:
     runs-on: ubuntu-latest
     
+    # 设置工作流保留策略
+    permissions:
+      contents: write
+      actions: write
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0  # 获取完整历史记录，便于比较
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -35,17 +40,13 @@ jobs:
         pip install --upgrade pip
         pip install pyyaml requests
 
-    - name: Show current kr.m3u status
+    - name: Show config file content
       run: |
-        echo "=== 当前 kr.m3u 状态 ==="
-        if [ -f kr.m3u ]; then
-          echo "文件存在"
-          echo "文件大小: $(wc -l < kr.m3u) 行"
-          echo "最后修改时间: $(stat -c %y kr.m3u)"
-          echo "前5行内容:"
-          head -5 kr.m3u
+        echo "=== channels-config.yml 内容 ==="
+        if [ -f channels-config.yml ]; then
+          cat channels-config.yml
         else
-          echo "文件不存在"
+          echo "channels-config.yml 不存在"
         fi
 
     - name: Run channel sync script
@@ -56,51 +57,59 @@ jobs:
         EXIT_CODE=$?
         echo "脚本退出码: $EXIT_CODE"
         echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
-        echo "=== 脚本执行完成 ==="
       continue-on-error: true
 
-    - name: Show generated file details
+    - name: Check generated m3u for groups
       run: |
-        echo "=== 生成的 kr.m3u 详细信息 ==="
+        echo "=== 检查生成的m3u文件 ==="
         if [ -f kr.m3u ]; then
-          echo "文件大小: $(wc -l < kr.m3u) 行"
-          echo "文件内容前20行:"
-          head -20 kr.m3u
-          echo ""
-          echo "文件内容后5行:"
-          tail -5 kr.m3u
-          echo ""
-          echo "统计信息:"
-          grep -c "^#EXTINF:" kr.m3u || echo "没有找到EXTINF行"
+          echo "文件存在，行数: $(wc -l < kr.m3u)"
+          
+          echo "=== 检查分组信息 ==="
+          if grep -q "group-title" kr.m3u; then
+            echo "✓ m3u文件中包含分组信息"
+            echo "分组统计:"
+            grep -o 'group-title="[^"]*"' kr.m3u | sort | uniq -c
+          else
+            echo "⚠ m3u文件中未找到分组信息"
+          fi
+          
+          echo "=== 频道数量 ==="
+          EXTINF_COUNT=$(grep -c "^#EXTINF:" kr.m3u)
+          echo "EXTINF行数: $EXTINF_COUNT"
+          
+          echo "=== 前5个频道信息 ==="
+          grep -A1 "^#EXTINF:" kr.m3u | head -10
         else
-          echo "错误: kr.m3u 文件未生成"
+          echo "✗ kr.m3u 文件未生成"
         fi
 
     - name: Compare with previous version
+      id: compare
       run: |
         echo "=== 与上次提交比较 ==="
         if [ -f kr.m3u ]; then
           if git show HEAD:kr.m3u > /dev/null 2>&1; then
             echo "检测到上一次提交中的 kr.m3u 文件"
-            if git diff --quiet HEAD kr.m3u; then
+            if git diff --no-index HEAD:kr.m3u kr.m3u > /dev/null 2>&1; then
               echo "没有检测到变化 - 文件内容相同"
-              echo "changes_detected=false" >> $GITHUB_ENV
+              echo "changed=false" >> $GITHUB_OUTPUT
             else
               echo "检测到变化 - 文件内容不同"
-              echo "变化的行数:"
-              git diff HEAD kr.m3u | grep -c "^[<>]" || true
-              echo "changes_detected=true" >> $GITHUB_ENV
+              echo "changed=true" >> $GITHUB_OUTPUT
+              echo "差异摘要:"
+              git diff --no-patch --no-index HEAD:kr.m3u kr.m3u 2>/dev/null || echo "无法计算差异"
             fi
           else
             echo "这是第一次生成 kr.m3u 文件"
-            echo "changes_detected=true" >> $GITHUB_ENV
+            echo "changed=true" >> $GITHUB_OUTPUT
           fi
         else
           echo "错误: kr.m3u 文件不存在"
-          echo "changes_detected=false" >> $GITHUB_ENV
+          echo "changed=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Upload kr.m3u as artifact (for debugging)
+    - name: Upload kr.m3u as artifact
       if: always()
       uses: actions/upload-artifact@v4
       with:
@@ -108,40 +117,39 @@ jobs:
         path: kr.m3u
         retention-days: 7
 
-    - name: Upload script logs
-      if: always()
-      run: |
-        echo "=== 收集调试信息 ==="
-        echo "工作目录: $(pwd)"
-        echo "文件列表:"
-        ls -la
-        echo "脚本目录内容:"
-        ls -la scripts/
-        echo "配置文件内容:"
-        if [ -f channels-config.yml ]; then
-          echo "channels-config.yml 内容:"
-          head -50 channels-config.yml
-        else
-          echo "channels-config.yml 不存在"
-        fi
-
     - name: Commit and push changes
-      if: env.changes_detected == 'true'
+      if: steps.compare.outputs.changed == 'true'
       run: |
         echo "=== 提交变更 ==="
         # 配置Git用户
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global pull.rebase false
+        
+        # 拉取最新更改避免冲突
+        git pull origin main --rebase --autostash
         
         # 添加并提交变更
         git add kr.m3u
-        git commit -m "Auto-sync: 更新韩国电视频道列表 [skip ci]"
-        git push
+        git commit -m "chore: auto-sync Korean TV channels $(date '+%Y-%m-%d %H:%M')"
         
-        echo "变更已提交并推送"
+        # 推送变更
+        git push origin main
+        
+        echo "✓ 变更已提交并推送"
 
     - name: No changes detected
-      if: env.changes_detected != 'true'
+      if: steps.compare.outputs.changed == 'false'
       run: |
         echo "=== 跳过提交 ==="
         echo "没有检测到文件变化，跳过提交"
+        
+    # 可选：清理旧的工作流运行记录
+    - name: Cleanup old workflow runs
+      if: always()
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 1
+        keep_minimum_runs: 3
