@@ -27,7 +27,8 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.9'
-        cache: 'pip'
+        # 禁用缓存，因为没有requirements.txt或pyproject.toml
+        cache: ''
 
     - name: Install dependencies
       run: |
