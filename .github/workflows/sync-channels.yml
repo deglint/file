@@ -35,113 +35,227 @@ jobs:
         pip install --upgrade pip
         pip install pyyaml requests
 
-    - name: Show current file info
+    - name: Debug script group handling
       run: |
-        echo "=== 当前文件状态 ==="
-        echo "当前目录:"
-        pwd
-        ls -la
+        echo "=== 检查脚本中的分组处理 ==="
+        echo "查看脚本文件中是否处理了group字段:"
         
-        echo "=== 当前 kr.m3u 内容预览 ==="
-        if [ -f kr.m3u ]; then
-          echo "文件大小: $(wc -l < kr.m3u) 行"
-          echo "前5行:"
-          head -5 kr.m3u
-          echo ""
-          echo "分组信息:"
-          grep -o 'group-title="[^"]*"' kr.m3u | sort | uniq -c || echo "无分组信息"
-        else
-          echo "kr.m3u 不存在"
-        fi
+        # 检查脚本中是否有group相关的代码
+        echo "1. 查找脚本中的group关键字:"
+        grep -n "group" scripts/sync_channels.py || echo "未找到group关键字"
+        
+        echo ""
+        echo "2. 检查group-title生成部分:"
+        grep -n "group-title" scripts/sync_channels.py || echo "未找到group-title"
+        
+        echo ""
+        echo "3. 检查配置文件读取部分:"
+        grep -n "group" scripts/sync_channels.py -A2 -B2 | head -20
 
-    - name: Show config content
+    - name: Test config loading
       run: |
-        echo "=== 配置文件内容 ==="
-        if [ -f channels-config.yml ]; then
-          cat channels-config.yml
+        echo "=== 测试配置文件加载 ==="
+        python -c "
+import yaml
+import os
+
+# 尝试加载配置文件
+config_path = 'channels-config.yml'
+if os.path.exists(config_path):
+    with open(config_path, 'r', encoding='utf-8') as f:
+        config = yaml.safe_load(f)
+    
+    print(f'配置文件加载成功，包含 {len(config.get(\"channels\", []))} 个频道')
+    
+    # 检查每个频道的分组信息
+    for i, channel in enumerate(config.get('channels', []), 1):
+        name = channel.get('name', '未知')
+        group = channel.get('group', '')
+        print(f'{i:2d}. {name} - 分组: {group if group else \"无分组\"}')
+else:
+    print('配置文件不存在')
+        "
+
+    - name: Show current m3u file
+      run: |
+        echo "=== 当前m3u文件状态 ==="
+        if [ -f kr.m3u ]; then
+          echo "当前文件行数: $(wc -l < kr.m3u)"
+          echo "分组信息:"
+          if grep -q "group-title" kr.m3u; then
+            grep -o 'group-title="[^"]*"' kr.m3u | sort | uniq -c
+          else
+            echo "⚠ 当前文件中没有分组信息"
+            echo "前5个频道行:"
+            grep -A1 "^#EXTINF:" kr.m3u | head -10
+          fi
         else
-          echo "配置文件不存在"
+          echo "kr.m3u文件不存在"
         fi
 
-    - name: Run sync script with debug output
+    - name: Run sync script with detailed output
       id: sync-script
       run: |
-        echo "=== 运行同步脚本 ==="
-        # 备份当前文件以便比较
+        echo "=== 运行同步脚本（详细输出）==="
+        
+        # 备份当前文件
         if [ -f kr.m3u ]; then
-          cp kr.m3u kr.m3u.backup
+          cp kr.m3u kr.m3u.old
+          echo "备份当前文件: kr.m3u.old"
         fi
         
-        # 运行脚本并捕获详细输出
+        # 运行脚本
+        echo "执行命令: python scripts/sync_channels.py"
         python scripts/sync_channels.py
         
-        EXIT_CODE=$?
-        echo "脚本退出码: $EXIT_CODE"
-        
-        echo "=== 脚本输出结束 ==="
-        
-        # 检查新生成的文件
+        # 检查新文件
+        echo ""
+        echo "=== 新文件状态 ==="
         if [ -f kr.m3u ]; then
           echo "新文件行数: $(wc -l < kr.m3u)"
           
-          echo "=== 新文件分组信息 ==="
+          # 检查分组信息
+          echo "新文件中的分组信息:"
           if grep -q "group-title" kr.m3u; then
-            echo "分组信息:"
+            echo "找到分组信息:"
             grep -o 'group-title="[^"]*"' kr.m3u | sort | uniq -c
           else
-            echo "⚠ 警告: 新文件中未找到分组信息"
+            echo "⚠ 新文件中没有分组信息"
+            echo "新文件前5个频道:"
+            grep -A1 "^#EXTINF:" kr.m3u | head -10
           fi
           
-          # 如果有备份，比较差异
-          if [ -f kr.m3u.backup ]; then
+          # 比较文件
+          if [ -f kr.m3u.old ]; then
+            echo ""
             echo "=== 文件比较 ==="
-            if diff -q kr.m3u kr.m3u.backup > /dev/null; then
-              echo "文件内容相同，无变化"
+            if cmp -s kr.m3u kr.m3u.old; then
+              echo "文件内容完全相同"
               echo "changed=false" >> $GITHUB_OUTPUT
             else
-              echo "文件内容不同，检测到变化"
-              echo "差异摘要:"
-              diff -u kr.m3u.backup kr.m3u | head -20
+              echo "文件内容不同"
+              echo "差异行数: $(diff -u kr.m3u.old kr.m3u | grep -E '^[+-]' | grep -v '^---' | grep -v '^+++' | wc -l)"
+              echo "差异示例:"
+              diff -u kr.m3u.old kr.m3u | head -20
               echo "changed=true" >> $GITHUB_OUTPUT
             fi
           else
-            echo "没有备份文件，视为有变化"
+            echo "旧文件不存在，视为有变化"
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
         else
-          echo "✗ 脚本未生成 kr.m3u 文件"
+          echo "错误: 脚本未生成kr.m3u文件"
           echo "changed=false" >> $GITHUB_OUTPUT
         fi
-      continue-on-error: true
 
-    - name: Upload debug artifacts
+    - name: Create test script to check group handling
       if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: debug-files
-        path: |
-          kr.m3u
-          kr.m3u.backup
-        retention-days: 3
-
-    - name: Commit and push changes
-      if: steps.sync-script.outputs.changed == 'true'
       run: |
-        echo "=== 准备提交变更 ==="
+        echo "=== 创建测试脚本验证分组处理 ==="
+        cat > test_group.py << 'EOF'
+#!/usr/bin/env python3
+"""测试脚本的分组处理功能"""
+
+import yaml
+import json
+import re
+
+# 加载配置
+with open('channels-config.yml', 'r', encoding='utf-8') as f:
+    config = yaml.safe_load(f)
+
+print("=== 配置文件中的分组信息 ===")
+channels = config.get('channels', [])
+print(f"总频道数: {len(channels)}")
+
+# 统计分组
+groups = {}
+for channel in channels:
+    group = channel.get('group', '')
+    groups[group] = groups.get(group, 0) + 1
+
+print("\n分组统计:")
+for group, count in groups.items():
+    print(f"  {group if group else '无分组'}: {count}个频道")
+
+# 模拟重建m3u文件
+print("\n=== 模拟生成m3u条目 ===")
+for i, channel in enumerate(channels[:3], 1):  # 只测试前3个
+    name = channel['name']
+    group = channel.get('group', '')
+    
+    # 模拟EXTINF行生成
+    if group:
+        extinf_line = f'#EXTINF:-1 tvg-id="TEST_ID" group-title="{group}",{name}'
+    else:
+        extinf_line = f'#EXTINF:-1 tvg-id="TEST_ID",{name}'
+    
+    print(f"{i}. {extinf_line}")
+
+print("\n=== 检查现有m3u文件 ===")
+try:
+    with open('kr.m3u', 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    # 统计分组
+    group_matches = re.findall(r'group-title="([^"]+)"', content)
+    if group_matches:
+        print(f"当前m3u文件中的分组: {len(set(group_matches))} 种")
+        from collections import Counter
+        group_counts = Counter(group_matches)
+        for group, count in group_counts.items():
+            print(f"  {group}: {count}次")
+    else:
+        print("当前m3u文件中没有分组信息")
         
-        # 显示变化详情
-        echo "检测到的变化:"
-        if [ -f kr.m3u.backup ]; then
-          echo "行数变化:"
-          echo "旧文件: $(wc -l < kr.m3u.backup) 行"
-          echo "新文件: $(wc -l < kr.m3u) 行"
-          
-          echo "分组信息变化:"
-          echo "旧文件分组:"
-          grep -o 'group-title="[^"]*"' kr.m3u.backup 2>/dev/null | sort | uniq -c || echo "无分组"
-          echo "新文件分组:"
-          grep -o 'group-title="[^"]*"' kr.m3u 2>/dev/null | sort | uniq -c || echo "无分组"
+except FileNotFoundError:
+    print("kr.m3u文件不存在")
+EOF
+        
+        python test_group.py
+
+    - name: Force commit if groups are missing
+      id: check-groups
+      run: |
+        echo "=== 检查分组状态 ==="
+        
+        if [ -f kr.m3u ]; then
+          # 检查新文件是否有分组
+          if grep -q "group-title" kr.m3u; then
+            echo "新文件包含分组信息"
+            echo "has_groups=true" >> $GITHUB_OUTPUT
+            
+            # 如果有旧文件，检查旧文件是否有分组
+            if [ -f kr.m3u.old ]; then
+              if grep -q "group-title" kr.m3u.old; then
+                echo "旧文件也包含分组信息"
+                echo "old_has_groups=true" >> $GITHUB_OUTPUT
+              else
+                echo "旧文件没有分组信息"
+                echo "old_has_groups=false" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "没有旧文件"
+              echo "old_has_groups=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "新文件没有分组信息"
+            echo "has_groups=false" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "新文件不存在"
+          echo "has_groups=false" >> $GITHUB_OUTPUT
         fi
+
+    - name: Commit changes (force if groups were added)
+      if: steps.check-groups.outputs.has_groups == 'true' && (steps.check-groups.outputs.old_has_groups == 'false' || steps.sync-script.outputs.changed == 'true')
+      run: |
+        echo "=== 提交变更 ==="
+        
+        # 显示变更摘要
+        echo "分组状态:"
+        echo "  新文件有分组: $(grep -c 'group-title' kr.m3u || echo 0) 个分组属性"
+        echo "  频道总数: $(grep -c '^#EXTINF:' kr.m3u || echo 0)"
         
         # 配置Git
         git config --global user.name "GitHub Actions"
@@ -150,29 +264,36 @@ jobs:
         # 添加文件
         git add kr.m3u
         
-        # 检查是否有可提交的更改
-        if git diff --cached --quiet; then
-          echo "没有检测到可提交的更改"
-          exit 0
+        # 检查是否有变更
+        if ! git diff --cached --quiet; then
+          git commit -m "auto-sync: update Korean TV channels with groups [skip ci]"
+          git pull --rebase origin main
+          git push origin main
+          echo "✓ 变更已提交并推送"
+        else
+          echo "没有检测到可提交的变更"
         fi
-        
-        # 提交
-        git commit -m "auto-sync: update Korean TV channels [skip ci]"
-        
-        # 尝试推送，处理可能的冲突
-        git pull --rebase origin main
-        git push origin main
-        
-        echo "✓ 变更已提交并推送"
 
-    - name: No changes to commit
-      if: steps.sync-script.outputs.changed == 'false'
+    - name: No changes needed
+      if: steps.check-groups.outputs.has_groups == 'false' || (steps.check-groups.outputs.old_has_groups == 'true' && steps.sync-script.outputs.changed == 'false')
       run: |
-        echo "=== 没有检测到变化 ==="
-        echo "kr.m3u 文件与之前版本相同，跳过提交"
-        
-    - name: Workflow cleanup
+        echo "=== 无需提交 ==="
+        echo "原因:"
+        if [ "${{ steps.check-groups.outputs.has_groups }}" = "false" ]; then
+          echo "- 新文件没有分组信息"
+        fi
+        if [ "${{ steps.check-groups.outputs.old_has_groups }}" = "true" ] && [ "${{ steps.sync-script.outputs.changed }}" = "false" ]; then
+          echo "- 旧文件已有分组信息且内容相同"
+        fi
+        echo "跳过提交"
+
+    - name: Upload artifacts for debugging
       if: always()
-      run: |
-        echo "=== 清理临时文件 ==="
-        rm -f kr.m3u.backup
+      uses: actions/upload-artifact@v4
+      with:
+        name: sync-debug
+        path: |
+          kr.m3u
+          kr.m3u.old
+          channels-config.yml
+        retention-days: 3
