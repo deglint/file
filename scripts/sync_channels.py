@@ -239,7 +239,7 @@ class ChannelSync:
             default_id = channel.get('default_id', '')
             backup_source = channel.get('backup_source', False)
             backup_match = channel.get('backup_match', json_match)
-            group = channel.get('group', '')  # 新增：获取分组信息
+            group = channel.get('group', '')  # 获取分组信息
             
             print(f"\n处理频道: {name}")
             print(f"  JSON匹配: {json_match}")
@@ -288,7 +288,7 @@ class ChannelSync:
                     'channel_id': channel_id,
                     'url': url,
                     'logo': logo,
-                    'group': group,  # 新增：保存分组信息
+                    'group': group,  # 保存分组信息
                     'success': True
                 })
                 print(f"  ✓ 成功提取频道信息")
@@ -324,19 +324,16 @@ class ChannelSync:
                 channel_id = channel['channel_id']
                 url = channel['url']
                 logo = channel['logo']
-                group = channel.get('group', '')  # 新增：获取分组
+                group = channel.get('group', '')  # 获取分组
                 
                 # 构建EXTINF行 - 根据是否有分组生成不同格式
+                # 关键修改：始终包含group-title属性，即使为空
                 if logo and logo != 'null':
-                    if group:
-                        extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}" tvg-logo="{logo}" group-title="{group}",{name}'
-                    else:
-                        extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}" tvg-logo="{logo}",{name}'
+                    # 无论group是否为空，都包含group-title属性
+                    extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}" tvg-logo="{logo}" group-title="{group}",{name}'
                 else:
-                    if group:
-                        extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}" group-title="{group}",{name}'
-                    else:
-                        extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}",{name}'
+                    # 无论group是否为空，都包含group-title属性
+                    extinf_line = f'#EXTINF:-1 tvg-id="{channel_id}" group-title="{group}",{name}'
                 
                 # 添加到文件
                 lines.append(extinf_line)
@@ -344,7 +341,7 @@ class ChannelSync:
                 lines.append("")  # 添加空行分隔
                 
                 added_count += 1
-                print(f"✓ 添加频道到新文件: {name}" + (f" (分组: {group})" if group else ""))
+                print(f"✓ 添加频道到新文件: {name}" + (f" (分组: {group})" if group else " (无分组)"))
             
             # 移除最后一个空行
             if lines and lines[-1] == "":
@@ -367,10 +364,21 @@ class ChannelSync:
                     group_name = channel.get('group', '无分组')
                     groups[group_name] = groups.get(group_name, 0) + 1
             
-            if groups:
-                print(f"  分组统计:")
-                for group_name, count in groups.items():
-                    print(f"    {group_name}: {count}个频道")
+            print(f"  分组统计:")
+            for group_name, count in groups.items():
+                print(f"    {group_name}: {count}个频道")
+            
+            # 验证生成的m3u文件
+            print(f"  验证生成的文件:")
+            with open('kr.m3u', 'r', encoding='utf-8') as f:
+                content = f.read()
+                group_count = content.count('group-title=')
+                print(f"    包含 {group_count} 个group-title属性")
+                if group_count > 0:
+                    # 提取所有分组
+                    group_matches = re.findall(r'group-title="([^"]*)"', content)
+                    unique_groups = set(group_matches)
+                    print(f"    发现 {len(unique_groups)} 个唯一分组: {', '.join([g if g else '无分组' for g in unique_groups])}")
             
             return True
             
