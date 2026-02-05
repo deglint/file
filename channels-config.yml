@@ -30,6 +30,27 @@ channels:
     epg_match: "MBN 플러스"
     default_id: ""
     backup_source: false
+
+  - name: "JTBC"
+    json_match: "JTBC"
+    group: "음악"
+    epg_match: "JTBC"
+    default_id: ""
+    backup_source: false
+
+  - name: "JTBC2"
+    json_match: "JTBC2"
+    group: "음악"
+    epg_match: "JTBC2"
+    default_id: "C15741.tving"
+    backup_source: false
+
+  - name: "JTBC4"
+    json_match: "JTBC4"
+    group: "음악"
+    epg_match: "JTBC4"
+    default_id: "C22041.tving"
+    backup_source: false
     
   # 드라마分组
   - name: "KBS드라마"
@@ -82,20 +103,70 @@ channels:
     default_id: "504.lg"
     backup_source: false
 
+  - name: "SBS플러스"
+    json_match: "SBS플러스"
+    group: "뉴스"
+    epg_match: "SBS플러스"
+    default_id: "612.lg"
+    backup_source: false
+    
   - name: "MBC"
     json_match: "MBC"
     group: "뉴스"
     epg_match: "MBC"
     default_id: "503.lg"
     backup_source: false
+
+  - name: "YTN"
+    json_match: "YTN"
+    group: "뉴스"
+    epg_match: "YTN"
+    default_id: "C00593.tving"
+    backup_source: false
+
+  - name: "YTN2"
+    json_match: "YTN2"
+    group: "뉴스"
+    epg_match: "YTN2"
+    default_id: "C01101.tving"
+    backup_source: false
+
+  - name: "연합뉴스TV"
+    json_match: "연합뉴스TV"
+    group: "뉴스"
+    epg_match: "연합뉴스TV"
+    default_id: "C00901.tving"
+    backup_source: false
+
+  - name: "tvN"
+    json_match: "tvN"
+    group: "뉴스"
+    epg_match: "tvN"
+    default_id: "C00551.tving"
+    backup_source: false
+
+  - name: "채널A"
+    json_match: "채널A"
+    group: "뉴스"
+    epg_match: "채널A"
+    default_id: "C01583.tving"
+    backup_source: false
+
+  - name: "채널A플러스"
+    json_match: "채널A플러스"
+    group: "뉴스"
+    epg_match: "채널A플러스"
+    default_id: "C17141.tving"
+    backup_source: false
     
-  # 经济频道分组
+  # 경제分组
   - name: "SBS Biz"
     json_match: "SBS Biz"
     group: "경제"
     epg_match: "SBS Biz"
     default_id: "616.lg"
     backup_source: false
+
 
 
 
