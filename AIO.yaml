@@ -1,7 +1,7 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [DMIT, RackNerd, 香港, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [DMIT, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [DMIT, RackNerd]}
+pr: &pr {type: select, proxies: [RackNerd, 香港, 台湾, 韩国, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, 新加坡]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, 新加坡]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -11,7 +11,6 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
-  - {name: DMIT, type: vless, server: 69.63.206.48, port: 2650, uuid: dc92f8ff-b485-4c87-8b4d-b1d3582afed8, flow: xtls-rprx-vision, tls: true, udp: true, network: tcp, servername: www.cloudflare.com, client-fingerprint: chrome, reality_opts: {public_key: bUr2YcAhrTUsYNl_PnKVYkAjpwkcuI8zZFW6Dxi_O2I}}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
 
 # 订阅提供者（保持不变）
@@ -166,6 +165,14 @@ proxy-groups:
     filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
 
+  - name: 新加坡
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    use: [LXY, BigME, OceanCloud]
+    filter: "^(?=.*新加坡)|(?=.*SG)|(?=.*SGP).*$"
+    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
+    
 rules:
   - DOMAIN-SUFFIX,bigmelook.com,Emby
   - DOMAIN-SUFFIX,oceancloud.asia,Emby
