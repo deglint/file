@@ -123,23 +123,22 @@ experimental:
 
 proxy-groups:
   # 应用策略组
-  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *auto}
+  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *fb}
   - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
-  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *auto}
+  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *fb}
   - {name: NETFLIX, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/netflix(red).png, <<: *pr}
   - {name: TikTok, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/tiktok.png, type: select, proxies: [韩国]}
   - {name: Apple, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/apple.png, <<: *pr}
-  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *auto}
-  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *auto}
+  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *fb}
+  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *fb}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
-  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *auto}
-  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *auto}
+  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *fb}
+  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *fb}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
-  - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *auto}
-  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *auto}
-
+  - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *fb}
+  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *fb}
   # 地区分组
   - name: 韩国
     type: url-test
