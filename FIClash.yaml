@@ -43,21 +43,6 @@ dns:
 
 # 直接定义的节点（从 AIO.yaml 移植）
 proxies:
-  # DMIT 节点（VLESS-REALITY）
-  - name: DMIT
-    type: vless
-    server: 69.63.206.48
-    port: 2650
-    uuid: dc92f8ff-b485-4c87-8b4d-b1d3582afed8
-    flow: xtls-rprx-vision
-    tls: true
-    udp: true
-    network: tcp
-    reality-opts:
-      public-key: bUr2YcAhrTUsYNl_PnKVYkAjpwkcuI8zZFW6Dxi_O2I
-    client-fingerprint: chrome
-    servername: www.cloudflare.com
-
   # RackNerd 节点（Hysteria2）
   - name: RackNerd
     type: hysteria2
