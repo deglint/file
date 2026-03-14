@@ -47,27 +47,26 @@ proxies:
   - name: DMIT
     type: vless
     server: 69.63.206.48
-    port: 65465
-    uuid: c0cea26b-2a10-4995-b646-72388fe3519e
+    port: 2650
+    uuid: dc92f8ff-b485-4c87-8b4d-b1d3582afed8
     flow: xtls-rprx-vision
     tls: true
     udp: true
     network: tcp
     reality-opts:
-      public-key: N-ufBX9zWNgFfZO2lR3EdGt8tPy1GvOk9h6twhza5hA
-      short-id: "02d6e3d1"
+      public-key: bUr2YcAhrTUsYNl_PnKVYkAjpwkcuI8zZFW6Dxi_O2I
     client-fingerprint: chrome
-    servername: www.icloud.com
+    servername: www.cloudflare.com
 
   # RackNerd 节点（Hysteria2）
   - name: RackNerd
     type: hysteria2
     server: 142.171.132.157
-    port: 21961
-    password: 21563837
+    port: 44540
+    password: 33684c9d
     sni: www.bing.com
-    insecure: true
     skip-cert-verify: true
+    udp: true
 
 proxy-groups:
   - name: PROXY
