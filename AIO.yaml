@@ -1,5 +1,5 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [RackNerd, JRY, 香港, 台湾, 韩国, DIRECT]}
+pr: &pr {type: select, proxies: [RackNerd-sing-box, JRY, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, JRY]}
 fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, JRY]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
@@ -12,6 +12,7 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: RackNerd-sing-box, type: vless, server: 142.171.132.157, port: 31232, uuid: 4fa9d8ba-8ad8-405c-9dd4-b50e353272cb, flow: xtls-rprx-vision, tls: true, udp: true, network: tcp, reality-opts: {public-key: 8-DCRqhWIl-n5zsd3uJQzeqsRpOVYtfWcLUaGGagahw}, servername: www.paypal.com, client-fingerprint: chrome}
   - {name: JRY, type: vless, server: 98.158.29.236, port: 31329, uuid: 4e2ab1e1-eb78-4c69-9953-8abbe5264360, flow: xtls-rprx-vision, tls: true, udp: true, network: tcp, reality-opts: {public-key: 5V9wn5YDnRo9Kf5yusBij92Ewu4-35loshttHxOjRA8}, servername: dash.cloudflare.com, client-fingerprint: chrome}
 
 # 订阅提供者（保持不变）
@@ -134,7 +135,7 @@ proxy-groups:
   - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *fb}
   - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *fb}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
-  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, type: select, proxies: [JRY, RackNerd]}
+  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, type: select, proxies: [RackNerd-sing-box, JRY]}
   - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *fb}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
