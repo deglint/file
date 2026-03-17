@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [RackNerd, JRY, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, JRY]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [JRY-HY2, 香港]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [JRY, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -12,8 +12,8 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: JRY, type: vless, server: 98.158.29.236, port: 31329, uuid: 4e2ab1e1-eb78-4c69-9953-8abbe5264360, flow: xtls-rprx-vision, tls: true, udp: true, network: tcp, reality-opts: {public-key: 5V9wn5YDnRo9Kf5yusBij92Ewu4-35loshttHxOjRA8}, servername: dash.cloudflare.com, client-fingerprint: chrome}
-  - {name: JRY-HY2, type: hysteria2, server: 98.158.29.236, port: 29222, password: 77e95852, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: JRY-Reality, type: vless, server: 98.158.29.236, port: 31329, uuid: 4e2ab1e1-eb78-4c69-9953-8abbe5264360, flow: xtls-rprx-vision, tls: true, udp: true, network: tcp, reality-opts: {public-key: 5V9wn5YDnRo9Kf5yusBij92Ewu4-35loshttHxOjRA8}, servername: dash.cloudflare.com, client-fingerprint: chrome}
+  - {name: JRY, type: hysteria2, server: 98.158.29.236, port: 29222, password: 77e95852, sni: www.bing.com, skip-cert-verify: true, udp: true}
   
 # 订阅提供者（保持不变）
 proxy-providers:
