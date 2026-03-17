@@ -133,7 +133,7 @@ proxy-groups:
   - {name: Apple, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/apple.png, <<: *pr}
   - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *auto}
   - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *auto}
-  - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *auto}
+  - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
   - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *fb}
   - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *auto}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
