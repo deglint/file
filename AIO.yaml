@@ -1,7 +1,7 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [RackNerd, BitsFlow, 香港, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, BitsFlow]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd]}
+pr: &pr {type: select, proxies: [RackNerd, BitsFlow, ReCloud, 香港, 台湾, 韩国, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, ReCloud, BitsFlow]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [ReCloud, BitsFlow, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -14,6 +14,7 @@ proxies:
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BitsFlow-Reality, type: vless, server: 98.158.29.236, port: 31329, uuid: 4e2ab1e1-eb78-4c69-9953-8abbe5264360, flow: xtls-rprx-vision, tls: true, udp: true, network: tcp, reality-opts: {public-key: 5V9wn5YDnRo9Kf5yusBij92Ewu4-35loshttHxOjRA8}, servername: dash.cloudflare.com, client-fingerprint: chrome}
   - {name: BitsFlow, type: hysteria2, server: 98.158.29.236, port: 29222, password: 77e95852, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: ReCloud, type: vless, server: 207.174.6.31, port: 6288, uuid: 6a76ef61-9fb8-474a-a6ae-e771bdc65074, flow: xtls-rprx-vision, tls: true, udp: true, network: tcp, reality-opts: {public-key: hlhzHhCx_sTqBEx3uvgiZ6GLBRshDrhhxWaWEOb9cxU}, servername: www.ebay.com, client-fingerprint: chrome}
   
 # 订阅提供者（保持不变）
 proxy-providers:
