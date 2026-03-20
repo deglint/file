@@ -1,5 +1,5 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [RackNerd, BitsFlow, ReCloud, 香港, 台湾, 韩国, DIRECT]}
+pr: &pr {type: select, proxies: [ReCloud, RackNerd, BitsFlow, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, ReCloud, BitsFlow]}
 fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [ReCloud, BitsFlow, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
@@ -141,7 +141,7 @@ proxy-groups:
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
   - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *auto}
-  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *pr}
+  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *auto}
   - name: 韩国
     type: url-test
     url: https://www.gstatic.com/generate_204
