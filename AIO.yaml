@@ -12,7 +12,7 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: BitsFlow, type: hysteria2, server: 98.158.29.236, port: 29222, password: 77e95852, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: BitsFlow, type: hysteria2, server: 98.158.29.152, port: 29222, password: 77e95852, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: ReCloud, type: hysteria2, server: 207.174.6.31, port: 20450, password: 8fbde511, sni: www.bing.com, skip-cert-verify: true, udp: true}
   
 # 订阅提供者（保持不变）
