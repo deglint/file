@@ -1,5 +1,5 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [BitsFlow, RackNerd, 香港, 台湾, 韩国, DIRECT]}
+pr: &pr {type: select, proxies: [BitsFlow, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd]}
 fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
@@ -13,6 +13,7 @@ proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BitsFlow, type: hysteria2, server: 82.139.215.74, port: 51533, password: 307c2f55, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: BitsFlow-DE, type: vless, server: 82.139.215.74, port: 45699, uuid: cdf38be7-582e-4055-94f6-831b929cd69f, flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: PQ2O0TFY9h20aHPZ-jP20y3j-Oup5RfvgelclOgYagk}}
   
 # 订阅提供者（保持不变）
 proxy-providers:
