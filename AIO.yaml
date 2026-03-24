@@ -14,7 +14,6 @@ proxies:
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BitsFlow, type: hysteria2, server: 82.139.215.74, port: 51533, password: 307c2f55, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BitsFlow-DE, type: vless, server: 82.139.215.74, port: 45699, uuid: cdf38be7-582e-4055-94f6-831b929cd69f, flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: PQ2O0TFY9h20aHPZ-jP20y3j-Oup5RfvgelclOgYagk}}
-  - {name: argo, type: vless, server: 142.171.132.157, port: 23456, uuid: 5393b677-4dcc-4d4c-8eb4-84f5ee0abea7, network: ws, tls: true, udp: true, skip-cert-verify: true}   # 新增节点
   
 # 订阅提供者（保持不变）
 proxy-providers:
@@ -126,7 +125,7 @@ experimental:
 
 proxy-groups:
   # 应用策略组
-  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, type: fallback, proxies: [argo, RackNerd, BitsFlow-DE, BitsFlow]}
+  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, type: fallback, proxies: [RackNerd, BitsFlow-DE, BitsFlow]}
   - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
   - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *fb}
