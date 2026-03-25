@@ -13,7 +13,7 @@ proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BitsFlow, type: hysteria2, server: 82.139.215.74, port: 51533, password: 307c2f55, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: BitsFlow-US, type: hysteria2, server: 108.165.23.31, port: 38995, password: 80a2f57d, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: BitsFlow-US, type: vless, server: 38.65.90.32, port: 7538, uuid: "5635c5f0-d5cc-40bd-af87-d3085d942e65", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 8PHDVLidnzIy634IB_-3Asq36vfzVWRaglFKjslh4Uk}}
   - {name: VMRack, type: hysteria2, server: 38.65.90.32, port: 34280, password: ab61767b, sni: www.bing.com, skip-cert-verify: true, udp: true}
   
 # 订阅提供者（保持不变）
