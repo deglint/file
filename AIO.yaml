@@ -1,7 +1,7 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [VMRack, BitsFlow, BitsFlow-US, RackNerd, 香港, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow, BitsFlow-US]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow, BitsFlow-US, RackNerd]}
+pr: &pr {type: select, proxies: [VMRack, RackNerd, 香港, 台湾, 韩国, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, RackNerd]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -12,9 +12,7 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: BitsFlow, type: hysteria2, server: 82.139.215.74, port: 51533, password: 307c2f55, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: BitsFlow-US, type: vless, server: 38.65.90.32, port: 7538, uuid: "5635c5f0-d5cc-40bd-af87-d3085d942e65", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 8PHDVLidnzIy634IB_-3Asq36vfzVWRaglFKjslh4Uk}}
-  - {name: VMRack, type: hysteria2, server: 38.65.90.32, port: 34280, password: ab61767b, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: VMRack, type: vless, server: 38.65.90.32, port: 7538, uuid: "5635c5f0-d5cc-40bd-af87-d3085d942e65", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 8PHDVLidnzIy634IB_-3Asq36vfzVWRaglFKjslh4Uk}}
   
 # 订阅提供者（保持不变）
 proxy-providers:
@@ -126,22 +124,22 @@ experimental:
 
 proxy-groups:
   # 应用策略组
-  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *auto}
+  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *fb}
   - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
-  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *auto}
+  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *fb}
   - {name: NETFLIX, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/netflix(red).png, <<: *pr}
   - {name: TikTok, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/tiktok.png, type: select, proxies: [韩国]}
   - {name: Apple, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/apple.png, <<: *pr}
-  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *auto}
-  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *auto}
+  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *fb}
+  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *fb}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
-  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *auto}
+  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *fb}
   - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *auto}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
   - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *auto}
-  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *auto}
+  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *fb}
   - name: 韩国
     type: url-test
     url: https://www.gstatic.com/generate_204
