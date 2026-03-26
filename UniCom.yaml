@@ -1,7 +1,8 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [VMRack, BitsFlow-HK, RackNerd, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-HK, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-HK, RackNerd]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, VMRack, BitsFlow-HK]}
+rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-HK]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -125,22 +126,22 @@ experimental:
 
 proxy-groups:
   # 应用策略组
-  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *auto}
+  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *fb}
   - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
-  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *fb}
+  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *rn}
   - {name: NETFLIX, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/netflix(red).png, <<: *pr}
   - {name: TikTok, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/tiktok.png, type: select, proxies: [韩国]}
   - {name: Apple, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/apple.png, <<: *pr}
-  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *fb}
-  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *fb}
+  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *rn}
+  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *rn}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
-  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *fb}
-  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *fb}
+  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *rn}
+  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *rn}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
   - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, type: fallback, proxies: [RackNerd, VMRack]}
-  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *fb}
+  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *rn}
   - name: 韩国
     type: url-test
     url: https://www.gstatic.com/generate_204
