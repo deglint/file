@@ -1,6 +1,6 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [VMRack, BitsFlow-HK, RackNerd, 香港, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow-HK, VMRack, RackNerd]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow-HK, VMRack]}
 fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow-HK, VMRack, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
@@ -125,7 +125,7 @@ experimental:
 
 proxy-groups:
   # 应用策略组
-  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *fb}
+  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *auto}
   - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
   - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *fb}
