@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [VMRack, BitsFlow-HK, RackNerd, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-HK, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, VMRack, BitsFlow-HK]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, VMRack, BitsFlow-HK, Argo]}
 rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-HK]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
@@ -15,6 +15,7 @@ proxies:
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: VMRack, type: vless, server: 38.65.90.32, port: 7538, uuid: "5635c5f0-d5cc-40bd-af87-d3085d942e65", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 8PHDVLidnzIy634IB_-3Asq36vfzVWRaglFKjslh4Uk}}
   - {name: BitsFlow-HK, type: vless, server: 216.23.93.83, port: 14001, uuid: "d4a3d6a5-6d2b-4ac7-aa0c-95c640642f3b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 2D_XKUYaKOzNEzbQbR2KZHztifuR2iHGBsJxeLfxOkQ}}
+  - {name: Argo, type: vless, server: 38.65.90.32, port: 23456, uuid: "93d4a679-5729-4c1b-be47-cc4809d41a6c", network: ws, tls: true, udp: true}
   
 # 订阅提供者（保持不变）
 proxy-providers:
