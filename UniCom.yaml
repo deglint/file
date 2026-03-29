@@ -180,7 +180,7 @@ rules:
   - RULE-SET,speedtest,Speedtest
   - RULE-SET,apple_proxy,Apple
   - RULE-SET,biliintl,台湾
-  - GEOSITE,category-ai,AI
+  - GEOSITE,GEOSITE,openai,AI
   - RULE-SET,youtube,YouTube
   - RULE-SET,google_site,Google
   - RULE-SET,google_ip,Google
