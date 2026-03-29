@@ -43,7 +43,7 @@ proxy-providers:
 
 mixed-port: 7890
 ipv6: true
-log-level: warning
+log-level: debug
 allow-lan: true
 skip-auth-prefixes:
 - 127.0.0.0/8
