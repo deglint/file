@@ -12,7 +12,7 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
-  - {name: RackNerd, type: hysteria2, server: "2607:f130:0:f8:ff:ff:a874:30d0", port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: RackNerd, type: hysteria2, server: "[2607:f130:0:f8:ff:ff:a874:30d0]:44540", port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: VMRack, type: vless, server: 38.65.90.32, port: 30484, uuid: "babc29bc-2348-4762-8da0-7df808d8605b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: TE822AQhk1gOo9vNKnfgp9GSKZUFlz8uMwkJXPkJDkY}}
   - {name: BitsFlow-HK, type: vless, server: 216.23.93.83, port: 14001, uuid: "d4a3d6a5-6d2b-4ac7-aa0c-95c640642f3b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 2D_XKUYaKOzNEzbQbR2KZHztifuR2iHGBsJxeLfxOkQ}}
   - {name: BitsFlow-DE, type: vless, server: 84.75.76.3, port: 49589, uuid: "b5a132af-60c1-4fe9-841c-5181fce744df", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: qEDmc3U0_Waesm-gprMdhRn-OTcqkKcDmyyRx-BHB0o}}
