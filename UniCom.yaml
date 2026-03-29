@@ -180,7 +180,7 @@ rules:
   - RULE-SET,speedtest,Speedtest
   - RULE-SET,apple_proxy,Apple
   - RULE-SET,biliintl,台湾
-  - GEOSITE,GEOSITE,openai,AI
+  - RULE-SET,ai,AI
   - RULE-SET,youtube,YouTube
   - RULE-SET,google_site,Google
   - RULE-SET,google_ip,Google
@@ -217,7 +217,9 @@ rule-providers:
   spotify:
     <<: *mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs"
-  # ai 规则提供者已删除，改用内置 GEOSITE category-ai
+  ai:
+    <<: *mrs
+    url: "https://raw.githubusercontent.com/JohnsonRan/CRules/mihomo/rules/AIs_merged.mrs"
   biliintl:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo-lite/geosite/biliintl.mrs"
