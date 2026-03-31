@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [VMRack, BitsFlow-HK, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-DE, BitsFlow-HK, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, VMRack, BitsFlow-DE, BitsFlow-HK]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd-IPv6, RackNerd, VMRack, BitsFlow-DE, BitsFlow-HK]}
 rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-DE, BitsFlow-HK]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
