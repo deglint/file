@@ -164,7 +164,7 @@ proxy-groups:
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [LXY, BigME, OceanCloud, BitsFlow-HK]
+    use: [LXY, BigME, OceanCloud]
     filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
