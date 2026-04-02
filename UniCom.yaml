@@ -175,6 +175,7 @@ rules:
   - DOMAIN-SUFFIX,oceancloud.asia,Emby
   - DOMAIN-SUFFIX,imbc.com,韩国
   - DOMAIN-SUFFIX,pandalive.co,PandaTV
+  - DOMAIN-SUFFIX,gemini.google.com,AI
   - DST-PORT,3478/19302,DIRECT
   - GEOIP,lan,LAN,no-resolve
   - RULE-SET,custom_direct,DIRECT
