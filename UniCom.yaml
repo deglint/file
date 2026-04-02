@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [VMRack, BitsFlow-HK, BitsFlow-DE-IPv6, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-DE-IPv6, BitsFlow-DE, BitsFlow-HK, RackNerd-IPv6, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow-Argo, RackNerd-IPv6, RackNerd, VMRack, BitsFlow-DE-IPv6, BitsFlow-DE, BitsFlow-HK]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd-IPv6, RackNerd, VMRack, BitsFlow-DE-IPv6, BitsFlow-DE, BitsFlow-HK]}
 rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [VMRack, BitsFlow-DE-IPv6, BitsFlow-DE, BitsFlow-HK]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
@@ -18,7 +18,6 @@ proxies:
   - {name: BitsFlow-HK, type: vless, server: 216.23.93.83, port: 14001, uuid: "d4a3d6a5-6d2b-4ac7-aa0c-95c640642f3b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 2D_XKUYaKOzNEzbQbR2KZHztifuR2iHGBsJxeLfxOkQ}}
   - {name: BitsFlow-DE, type: vless, server: 84.75.76.3, port: 49589, uuid: "b5a132af-60c1-4fe9-841c-5181fce744df", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: qEDmc3U0_Waesm-gprMdhRn-OTcqkKcDmyyRx-BHB0o}}
   - {name: BitsFlow-DE-IPv6, type: hysteria2, server: 2a0c:4ac1:15:1::a, port: 5210, password: ac988872, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: BitsFlow-Argo, type: vless, server: 2a0c:4ac1:15:1::a, port: 23456, uuid: "c9834bfd-8fd2-423b-8471-f47a1f0a53fd", network: ws, tls: true, udp: true, servername: argo.963369.shop, skip-cert-verify: true, ws-opts: {path: "/"}}
   
 # 订阅提供者（保持不变）
 proxy-providers:
