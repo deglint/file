@@ -170,6 +170,8 @@ rules:
   - DOMAIN-SUFFIX,bigmelook.com,Emby
   - DOMAIN-SUFFIX,oceancloud.asia,Emby
   - DOMAIN-SUFFIX,imbc.com,韩国
+  - DOMAIN-SUFFIX,tving.com,韩国
+  - DOMAIN-SUFFIX,co.kr,韩国
   - DOMAIN-SUFFIX,pandalive.co,PandaTV
   - DST-PORT,3478/19302,DIRECT
   - GEOIP,lan,LAN,no-resolve
