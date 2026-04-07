@@ -1,5 +1,5 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [[Geelinx, VMRack, BitsFlow-HK, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
+pr: &pr {type: select, proxies: [Geelinx, VMRack, BitsFlow-HK, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, BitsFlow-HK, VMRack, BitsFlow-DE]}
 fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [香港, Geelinx, BitsFlow-HK, VMRack, BitsFlow-DE, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
