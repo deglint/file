@@ -1,8 +1,8 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [Geelinx, VMRack, BitsFlow-HK, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, VMRack, BitsFlow-DE, BitsFlow-HK, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, RackNerd, VMRack, BitsFlow-DE, BitsFlow-HK]}
-rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, VMRack, BitsFlow-DE, BitsFlow-HK]}
+pr: &pr {type: select, proxies: [Geelinx, BitsFlow-HK, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, BitsFlow-DE, BitsFlow-HK, RackNerd]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, RackNerd, BitsFlow-DE, BitsFlow-HK]}
+rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, BitsFlow-DE, BitsFlow-HK]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -16,7 +16,6 @@ proxies:
   - {name: RackNerd-Vless, type: vless, server: 142.171.132.157, port: 26238, uuid: "c92a7f15-0ee5-4737-a7c0-f345703b1173", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: fn8vM_pB5VnxRBSsnHdFskTcMIEXPXF5orRsvtImohI}}
   - {name: RackNerd-IPv6-Vless, type: vless, server: 2607:f130:0:f8:ff:ff:a874:30d0, port: 26238, uuid: "c92a7f15-0ee5-4737-a7c0-f345703b1173", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: fn8vM_pB5VnxRBSsnHdFskTcMIEXPXF5orRsvtImohI}}
   - {name: RackNerd-IPv6, type: hysteria2, server: 2607:f130:0:f8:ff:ff:a874:30d0, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: VMRack, type: vless, server: 38.65.90.32, port: 30484, uuid: "babc29bc-2348-4762-8da0-7df808d8605b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: TE822AQhk1gOo9vNKnfgp9GSKZUFlz8uMwkJXPkJDkY}}
   - {name: BitsFlow-HK, type: vless, server: 216.23.93.83, port: 14001, uuid: "d4a3d6a5-6d2b-4ac7-aa0c-95c640642f3b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 2D_XKUYaKOzNEzbQbR2KZHztifuR2iHGBsJxeLfxOkQ}}
   - {name: BitsFlow-DE, type: hysteria2, server: 84.75.76.3, port: 5210, password: ac988872, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BitsFlow-DE-IPv6-Vless, type: vless, server: 2a0c:4ac1:15:1::a, port: 11862, uuid: "89efe4f2-9daf-49ae-9c99-c2fbd39815df", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.ebay.com, client-fingerprint: chrome, reality-opts: {public-key: zGzqyQoEZ29i0pMHaXGwt8zPosWWka00jsQ6qddouDE}}
