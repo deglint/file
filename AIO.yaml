@@ -1,7 +1,7 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [Geelinx, VMRack, BitsFlow-HK, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, BitsFlow-HK, VMRack, BitsFlow-DE]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [香港, Geelinx, BitsFlow-HK, VMRack, BitsFlow-DE, RackNerd]}
+pr: &pr {type: select, proxies: [Geelinx, BitsFlow-HK, BitsFlow-DE, RackNerd, 香港, 台湾, 韩国, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [Geelinx, BitsFlow-HK, BitsFlow-DE]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [香港, Geelinx, BitsFlow-HK, BitsFlow-DE, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -12,7 +12,6 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 142.171.132.157, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: VMRack, type: vless, server: 38.65.90.32, port: 30484, uuid: "babc29bc-2348-4762-8da0-7df808d8605b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: TE822AQhk1gOo9vNKnfgp9GSKZUFlz8uMwkJXPkJDkY}}
   - {name: BitsFlow-HK, type: vless, server: 216.23.93.83, port: 14001, uuid: "d4a3d6a5-6d2b-4ac7-aa0c-95c640642f3b", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: 2D_XKUYaKOzNEzbQbR2KZHztifuR2iHGBsJxeLfxOkQ}}
   - {name: BitsFlow-DE, type: vless, server: 84.75.76.3, port: 49589, uuid: "b5a132af-60c1-4fe9-841c-5181fce744df", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: qEDmc3U0_Waesm-gprMdhRn-OTcqkKcDmyyRx-BHB0o}}
   - {name: Geelinx, type: vless, server: 212.135.36.30, port: 32486, uuid: "d77dd953-dce0-4100-a85f-cf5950a359d3", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: lBo_nzWRasLjIhIl0a7f3QEquNqGLxujql2NmNkxrVU}}
