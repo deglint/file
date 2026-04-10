@@ -2,7 +2,7 @@
 pr: &pr {type: select, proxies: [RackNerd, HNCloud, 香港, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
 hy: &hy {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
-vl: &vl {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
+vl: &vl {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [HNCloud, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -129,19 +129,19 @@ proxy-groups:
   - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *hy}
   - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
-  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *hy}
+  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *vl}
   - {name: NETFLIX, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/netflix(red).png, <<: *pr}
   - {name: TikTok, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/tiktok.png, type: select, proxies: [韩国]}
   - {name: Apple, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/apple.png, <<: *pr}
-  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *hy}
-  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *hy}
+  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *vl}
+  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *vl}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
   - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *hy}
   - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *hy}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
   - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *auto}
-  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *hy}
+  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *vl}
   - name: 韩国
     type: url-test
     url: https://www.gstatic.com/generate_204
