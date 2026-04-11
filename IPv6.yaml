@@ -1,8 +1,8 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [RackNerd, HNCloud, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
-rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
-hn: &hn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [HNCloud, RackNerd]}
+pr: &pr {type: select, proxies: [RackNerd, HNCloud, BitsFlow, 台湾, 韩国, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud, BitsFlow]}
+rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, BitsFlow, HNCloud]}
+hn: &hn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, HNCloud, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -14,6 +14,7 @@ proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 2607:f130:0:f8:ff:ff:a874:30d0, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: HNCloud, type: vless, server: 154.86.29.180, port: 38284, uuid: "1e3f813f-856b-48d3-9d7e-bdba19685e3a", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.paypal.com, client-fingerprint: chrome, reality-opts: {public-key: NtyuyLkXq8Q4EihD77S7anOOl7ZQKmOVBR_ytPQ-V2Y}}
+  - {name: BitsFlow, type: vless, server: 178.22.26.158, port: 38690, uuid: "3fe7ade4-69f9-44eb-99f1-dad5dba3d38a", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: zZuu2QwbdtKoyZ_4DaCvRMS7OEqvtDUM7YCzmgnZ_Sw}}
   
 # 订阅提供者（保持不变）
 proxy-providers:
