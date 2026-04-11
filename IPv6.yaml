@@ -146,7 +146,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 300
     use: [LXY, BigME, OceanCloud]
-    proxies: [HNCloud, RackNerd]
+    proxies: []
     filter: "^(?=.*韩国)|(?=.*KR).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Korea(2).png
   
@@ -155,7 +155,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 300
     use: [LXY, BigME, OceanCloud]
-    proxies: [HNCloud, RackNerd]
+    proxies: []
     filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
     
