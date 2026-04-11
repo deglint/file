@@ -1,5 +1,5 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [RackNerd, HNCloud, 香港, 台湾, 韩国, DIRECT]}
+pr: &pr {type: select, proxies: [RackNerd, HNCloud, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
 hy: &hy {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
 vl: &vl {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [HNCloud, RackNerd]}
@@ -12,7 +12,6 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
-  - {name: RackNerd-Vless, type: vless, server: 2607:f130:0:f8:ff:ff:a874:30d0, port: 26238, uuid: "c92a7f15-0ee5-4737-a7c0-f345703b1173", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: fn8vM_pB5VnxRBSsnHdFskTcMIEXPXF5orRsvtImohI}}
   - {name: RackNerd, type: hysteria2, server: 2607:f130:0:f8:ff:ff:a874:30d0, port: 44540, password: 33684c9d, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: HNCloud, type: vless, server: 154.86.29.180, port: 38284, uuid: "1e3f813f-856b-48d3-9d7e-bdba19685e3a", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.paypal.com, client-fingerprint: chrome, reality-opts: {public-key: NtyuyLkXq8Q4EihD77S7anOOl7ZQKmOVBR_ytPQ-V2Y}}
   
@@ -147,6 +146,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 300
     use: [LXY, BigME, OceanCloud]
+    proxies: [HNCloud, RackNerd]
     filter: "^(?=.*韩国)|(?=.*KR).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Korea(2).png
   
@@ -155,17 +155,9 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 300
     use: [LXY, BigME, OceanCloud]
+    proxies: [HNCloud, RackNerd]
     filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
-  
-  - name: 香港
-    type: url-test
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-    use: [LXY, BigME, OceanCloud]
-    proxies: [HNCloud]
-    filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG)|(?=.*HNCloud).*$"
-    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
   - DOMAIN-SUFFIX,bigmelook.com,Emby
