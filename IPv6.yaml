@@ -1,8 +1,8 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [RackNerd, HNCloud, BitsFlow, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud, BitsFlow]}
-rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud, BitsFlow]}
-hn: &hn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, HNCloud, RackNerd]}
+rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud]}
+hn: &hn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, HNCloud]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
