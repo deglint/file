@@ -213,8 +213,8 @@ rule-providers:
     <<: *mrs
     url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs"
   ai:
-    <<: *classicaltxt
-    url: "https://github.com/ACL4SSR/ACL4SSR/blob/master/Clash/Ruleset/AI.list"
+    <<: *mrs
+    url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/openai.mrs"
   biliintl:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo-lite/geosite/biliintl.mrs"
