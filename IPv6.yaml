@@ -165,6 +165,8 @@ rules:
   - DOMAIN-SUFFIX,tving.com,韩国
   - DOMAIN-SUFFIX,co.kr,韩国
   - DOMAIN-SUFFIX,pandalive.co,PandaTV
+  - RULE-SET,biliintl,台湾
+  - RULE-SET,bahamut,台湾
   - DOMAIN-SUFFIX,gemini.google.com,AI
   - DST-PORT,3478/19302,DIRECT
   - GEOIP,lan,LAN,no-resolve
@@ -174,7 +176,6 @@ rules:
   - RULE-SET,apple-cn,DIRECT
   - RULE-SET,speedtest,Speedtest
   - RULE-SET,apple_proxy,Apple
-  - RULE-SET,biliintl,台湾
   - RULE-SET,ai,AI
   - RULE-SET,youtube,YouTube
   - RULE-SET,google_site,Google
@@ -185,7 +186,6 @@ rules:
   - RULE-SET,tg_ip,Telegram
   - RULE-SET,github,Github
   - RULE-SET,microsoft,Microsoft
-  - RULE-SET,bahamut,台湾
   - RULE-SET,steamcn,DIRECT
   - RULE-SET,gfwlist,MATCH
   - RULE-SET,chinadomains,DIRECT
