@@ -211,13 +211,13 @@ rule-providers:
     url: "https://raw.githubusercontent.com/JohnsonRan/CRules/master/rules/customProxy.yaml"
   spotify:
     <<: *mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs"
+    url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/spotify.mrs"
   ai:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/openai.mrs"
   biliintl:
     <<: *mrs
-    url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo-lite/geosite/biliintl.mrs"
+    url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/biliintl.mrs"
   tracker:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/tracker.mrs"
