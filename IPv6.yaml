@@ -136,11 +136,11 @@ proxy-groups:
   - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *hn}
   - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *hn}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
-  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *rn}
-  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *rn}
+  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *hn}
+  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *hn}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
-  - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *auto}
+  - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *pr}
   - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *hn}
   - name: 韩国
     type: url-test
