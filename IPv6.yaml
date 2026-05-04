@@ -20,7 +20,7 @@ proxies:
 proxy-providers:
   LXY:
     <<: *p
-    url: "https://liangxin.xyz/api/v1/liangxin?OwO=b9d7616efa898e337842969b17e7e6e7"
+    url: "https://liangxin.xyz/api/v1/liangxin?OwO=5fb608cadd512bea88f8bc7f981675c2"
     exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|美国|US|USA|新加坡|SG|SGP"
     filter: "高速"
     override:
