@@ -157,6 +157,14 @@ proxy-groups:
     use: [LXY, BigME, OceanCloud]
     filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
+
+  - name: 香港
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    use: [LXY, BigME, OceanCloud]
+    filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
+    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
   - DOMAIN-SUFFIX,bigmelook.com,Emby
