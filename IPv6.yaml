@@ -1,8 +1,8 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [RackNerd, HNCloud, BitsFlow, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud, BitsFlow]}
-rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, BitsFlow, HNCloud]}
-hn: &hn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd, HNCloud]}
+rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [香港, RackNerd, BitsFlow, HNCloud]}
+hn: &hn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [香港, BitsFlow, RackNerd, HNCloud]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -157,6 +157,14 @@ proxy-groups:
     use: [LXY, BigME, OceanCloud]
     filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
+
+  - name: 香港
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    use: [LXY, BigME, OceanCloud]
+    filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
+    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
   - DOMAIN-SUFFIX,bigmelook.com,Emby
