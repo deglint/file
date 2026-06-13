@@ -14,7 +14,7 @@ proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: hysteria2, server: 2607:9d00:2000:020a::3eec:bd85, port: 35606, password: e0e6ad00, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: HNCloud, type: vless, server: 154.86.29.180, port: 47956, uuid: "dca603c7-9038-4154-aa51-4b0027d3930a", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.paypal.com, client-fingerprint: chrome, reality-opts: {public-key: iRS0iq2XIeZSlIyhpgy4Smn93yJ-neTt6Ga6Ntpzcis}}
-  - {name: BitsFlow, type: vless, server: 192.168.131.136, port: 9887, uuid: "66409f00-a7bb-4e23-a989-978e1df848af", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: YrMSxd0AaMjkyzselUdg_tSLPl_G3RC-4OAEGhmA7W0}}
+  - {name: BitsFlow, type: vless, server: 2604:a840:100:84::a, port: 13194, uuid: "be217954-2834-46f1-a001-210a090e3cfd", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: aws.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: JfPrPq6n8CKMOvoZlV02H6JYIcew5i88G5Qgr4G94C8}}
   
 # 订阅提供者（保持不变）
 proxy-providers:
