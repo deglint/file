@@ -199,7 +199,7 @@ rules:
   - RULE-SET,chinadomains,DIRECT
   - RULE-SET,cn_site,DIRECT
   - RULE-SET,cn_ip,DIRECT
-  - MATCH,DIRECT
+  - MATCH,MATCH
 
 rule-anchor:
   ip: &ip {type: http, interval: 86400, behavior: ipcidr, format: yaml}
