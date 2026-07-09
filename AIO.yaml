@@ -19,13 +19,6 @@ proxies:
   
 # 订阅提供者（保持不变）
 proxy-providers:
-  LXY:
-    <<: *p
-    url: "https://liangxin.xyz/api/v1/liangxin?OwO=5fb608cadd512bea88f8bc7f981675c2"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|美国|US|USA|新加坡|SG|SGP"
-    filter: "高速"
-    override:
-      additional-prefix: "LXY |"
   BigME:
     <<: *p
     url: "https://api0.bigmelook.com/BigME/Subscription/api/v1/client/subscribe?token=2d85c5bb05dbab1fef2438dc3e52495d"
@@ -147,7 +140,7 @@ proxy-groups:
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [LXY, BigME, OceanCloud]
+    use: [BigME, OceanCloud]
     filter: "^(?=.*韩国)|(?=.*KR).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Korea(2).png
   
@@ -155,7 +148,7 @@ proxy-groups:
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [LXY, BigME, OceanCloud]
+    use: [BigME, OceanCloud]
     filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
 
@@ -163,7 +156,7 @@ proxy-groups:
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [LXY, BigME, OceanCloud]
+    use: [BigME, OceanCloud]
     filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
