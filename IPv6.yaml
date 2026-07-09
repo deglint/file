@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [RackNerd, HNCloud, BitsFlow, 台湾, 韩国, DIRECT]}
 auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud, BitsFlow]}
-rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, BitsFlow, HNCloud]}
+rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [DMIT, RackNerd, BitsFlow, HNCloud]}
 bf: &bf {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd, HNCloud]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
@@ -13,6 +13,7 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: RackNerd, type: ss, server: 2607:9d00:2000:020a::3eec:bd85, port: 41919, password: "aFkGPduTY33izO+cjzyL7A==", cipher: 2022-blake3-aes-128-gcm, udp: true}
+  - {name: DMIT, type: ss, server: 2605:52c0:1:1c04:be24:11ff:fe57:75d7, port: 23456, password: "sVK28B7j4GFfK6e3oq5nH+bMAQfFV6DuW3DZpsW1NYE=", cipher: 2022-blake3-aes-256-gcm, udp: true}
   - {name: HNCloud, type: vless, server: 154.86.29.180, port: 47956, uuid: "dca603c7-9038-4154-aa51-4b0027d3930a", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.paypal.com, client-fingerprint: chrome, reality-opts: {public-key: iRS0iq2XIeZSlIyhpgy4Smn93yJ-neTt6Ga6Ntpzcis}}
   - {name: BitsFlow, type: ss, server: 2604:a840:100:84::a, port: 12345, password: "HmU66HXMQ270tnJUHEaiykQevb59A1dTJPYGemmlRcI=", cipher: 2022-blake3-chacha20-poly1305, udp: true}
   
