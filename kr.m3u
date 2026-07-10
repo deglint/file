@@ -6,13 +6,13 @@ https://backup.760515.xyz/playlist/TV CHOSUN-playlist.m3u8
 #EXTINF:-1 tvg-id="C00585.tving" tvg-logo="https://pjytv.760515.xyz/logo/TV CHOSUN 2.png" group-title="음악",TV조선 2
 https://backup.760515.xyz/playlist/TV CHOSUN 2-playlist.m3u8
 
-#EXTINF:-1 tvg-id="C00708.tving" tvg-logo="https://pjytv.760515.xyz/logo/MBN.png" group-title="음악",MBN
+#EXTINF:-1 tvg-id="" tvg-logo="https://pjytv.760515.xyz/logo/MBN.png" group-title="음악",MBN
 https://backup.760515.xyz/playlist/MBN-playlist.m3u8
 
-#EXTINF:-1 tvg-id="C17142.tving" tvg-logo="https://pjytv.760515.xyz/logo/MBN 플러스.png" group-title="음악",MBN 플러스
+#EXTINF:-1 tvg-id="" tvg-logo="https://pjytv.760515.xyz/logo/MBN 플러스.png" group-title="음악",MBN 플러스
 https://backup.760515.xyz/playlist/MBN 플러스-playlist.m3u8
 
-#EXTINF:-1 tvg-id="C22041.tving" tvg-logo="https://pjytv.760515.xyz/logo/JTBC.png" group-title="음악",JTBC
+#EXTINF:-1 tvg-id="" tvg-logo="https://pjytv.760515.xyz/logo/JTBC.png" group-title="음악",JTBC
 https://backup.760515.xyz/playlist/JTBC-playlist.m3u8
 
 #EXTINF:-1 tvg-id="C15741.tving" tvg-logo="https://pjytv.760515.xyz/logo/JTBC2.png" group-title="음악",JTBC2
@@ -36,7 +36,7 @@ https://backup.760515.xyz/playlist/KBS1-playlist.m3u8
 #EXTINF:-1 tvg-id="181.lg" tvg-logo="https://backup.760515.xyz/logo/KBS2.png" group-title="뉴스",KBS2
 https://backup.760515.xyz/playlist/KBS2-playlist.m3u8
 
-#EXTINF:-1 tvg-id="181.lg" tvg-logo="https://backup.760515.xyz/logo/KBS뉴스.png" group-title="뉴스",KBS뉴스
+#EXTINF:-1 tvg-id="" tvg-logo="https://backup.760515.xyz/logo/KBS뉴스.png" group-title="뉴스",KBS뉴스
 https://news24.gscdn.kbs.co.kr/news24-02/news24-02_hd.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9uZXdzMjQuZ3NjZG4ua2JzLmNvLmtyL25ld3MyNC0wMi8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzgzODE0MzUzfX19XX0_&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=YzBTQRm3HM40I2L4ZfMJVdBFB-3-M-u2JDX6trpZRmsWbiaLJHocv-c-lynz-v29rdYdgx39Z~dByzRNBf76Rb1GFl-QuPgKFDV6yDwugjmXluJ5dbKV3QhcOWs2tFVhYk9zn6k8m69cq5bGIyc06ChFW~r2vuJI8j2LkWPNllHcEtNfL~~YffVLmIGhC8qsjsJnwatxmNlVF1mmhR96QriAzysAfg6QqLAL0PqnzKhIbJTQYumB7-pgN5Vo0jZ08lTxS2t2AJrWxb~DM-5RpLlrP2zF-KAW3-wrlAAS73~NvXkh2KNe5LtcvwT9-ftTbFNd4uXMkLz1jA0rlLj8jQ__
 
 #EXTINF:-1 tvg-id="504.lg" tvg-logo="https://backup.760515.xyz/logo/SBS.png" group-title="뉴스",SBS
@@ -54,7 +54,7 @@ https://backup.760515.xyz/playlist/YTN-playlist.m3u8
 #EXTINF:-1 tvg-id="C01101.tving" tvg-logo="https://pjytv.760515.xyz/logo/YTN2.png" group-title="뉴스",YTN2
 https://backup.760515.xyz/playlist/YTN2-playlist.m3u8
 
-#EXTINF:-1 tvg-id="C01723.tving" tvg-logo="https://pjytv.760515.xyz/logo/연합뉴스TV.png" group-title="뉴스",연합뉴스TV
+#EXTINF:-1 tvg-id="C00901.tving" tvg-logo="https://pjytv.760515.xyz/logo/연합뉴스TV.png" group-title="뉴스",연합뉴스TV
 https://backup.760515.xyz/playlist/연합뉴스TV-playlist.m3u8
 
 #EXTINF:-1 tvg-id="C00551.tving" tvg-logo="https://pjytv.760515.xyz/logo/tvN.png" group-title="뉴스",tvN
