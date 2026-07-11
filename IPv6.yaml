@@ -139,11 +139,11 @@ proxy-groups:
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    proxies:                     # 新增：直接引用本地节点
+    proxies:
       - DMIT
       - BitsFlow
       - RackNerd
-    use: [BigME, OceanCloud]     # 移除 DMIT，仅保留真正的 provider
+    use: [BigME, OceanCloud]
     filter: "^(?=.*美国)|(?=.*US)|(?=.*USA)|(?=.*DMIT)|(?=.*BitsFlow)|(?=.*RackNerd).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
