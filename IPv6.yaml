@@ -22,7 +22,7 @@ proxy-providers:
     <<: *p
     url: "https://api0.bigmelook.com/BigME/Subscription/api/v1/client/subscribe?token=2d85c5bb05dbab1fef2438dc3e52495d"
     exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP"
-    filter: "^(?=.*三网)(?=.*HK|.*TW|.*SG|.*KR).*$"
+    filter: "^(?=.*三网)(?=.*HK|.*TW|.*SG|.*KR|.*US).*$"
     override:
       additional-prefix: "BigME |"
   OceanCloud:
