@@ -21,14 +21,14 @@ proxy-providers:
   BigME:
     <<: *p
     url: "https://api0.bigmelook.com/BigME/Subscription/api/v1/client/subscribe?token=2d85c5bb05dbab1fef2438dc3e52495d"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP"
+    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP|美国|US|USA"
     filter: "^(?=.*三网)(?=.*HK|.*TW|.*SG|.*KR|.*US).*$"
     override:
       additional-prefix: "BigME |"
   OceanCloud:
     <<: *p
     url: "https://cdn.hugehard.art/api/d2a0b8fec95c7eca74597fd1d825580a"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|穿透|新加坡|SG|SGP"
+    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|穿透|新加坡|SG|SGP|美国|US|USA"
     filter: ".*"
     override:
       additional-prefix: "Ocean |"
@@ -143,8 +143,9 @@ proxy-groups:
       - DMIT
       - BitsFlow
       - RackNerd
+      - HNCloud
     use: [BigME, OceanCloud]
-    filter: "^(?=.*美国)|(?=.*US)|(?=.*USA)|(?=.*DMIT)|(?=.*BitsFlow)|(?=.*RackNerd).*$"
+    filter: "^(?=.*DMIT)|(?=.*BitsFlow)|(?=.*RackNerd).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
   - name: 韩国
@@ -164,11 +165,16 @@ proxy-groups:
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
 
   - name: 香港
-    type: url-test
+    type: fallback
     url: https://www.gstatic.com/generate_204
     interval: 300
+    proxies:
+      - DMIT
+      - BitsFlow
+      - RackNerd
+      - HNCloud
     use: [BigME, OceanCloud]
-    filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
+    filter: "^(?=.*HNCloud)|(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
