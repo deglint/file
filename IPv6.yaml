@@ -139,7 +139,7 @@ proxy-groups:
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [BigME, OceanCloud]
+    use: [BigME, OceanCloud, DMIT]
     filter: "^(?=.*美国)|(?=.*US)|(?=.*USA)|(?=.*DMIT)|(?=.*BitsFlow)|(?=.*RackNerd).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
