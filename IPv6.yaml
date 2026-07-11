@@ -136,7 +136,7 @@ proxy-groups:
   - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *pr}
   - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *fb}
   - name: 美国
-    type: url-test
+    type: fallback
     url: https://www.gstatic.com/generate_204
     interval: 300
     proxies:
