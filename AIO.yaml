@@ -1,8 +1,7 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [RackNerd, HNCloud, BitsFlow, 台湾, 韩国, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, HNCloud, BitsFlow]}
-rn: &rn {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [DMIT, RackNerd, BitsFlow, HNCloud]}
-bf: &bf {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd, HNCloud]}
+pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd, HNCloud]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd, HNCloud]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -12,24 +11,24 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
-  - {name: DMIT, type: vless, server: 179.255.152.139, port: 8676, uuid: "8375d44e-6705-437e-be00-4667d7ebbed3", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.ebay.com, client-fingerprint: chrome, reality-opts: {public-key: t0XC5NctQGz1Qlurw2uT3L3ACZmdP8LDCr3XGrP0gHk}}
   - {name: RackNerd, type: hysteria2, server: 192.119.76.178, port: 35606, password: e0e6ad00, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: HNCloud, type: vless, server: 154.86.29.180, port: 47956, uuid: "dca603c7-9038-4154-aa51-4b0027d3930a", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.paypal.com, client-fingerprint: chrome, reality-opts: {public-key: iRS0iq2XIeZSlIyhpgy4Smn93yJ-neTt6Ga6Ntpzcis}}
   - {name: BitsFlow, type: vless, server: 104.245.13.132, port: 13194, uuid: "be217954-2834-46f1-a001-210a090e3cfd", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: aws.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: JfPrPq6n8CKMOvoZlV02H6JYIcew5i88G5Qgr4G94C8}}
+
   
 # 订阅提供者（保持不变）
 proxy-providers:
   BigME:
     <<: *p
     url: "https://api0.bigmelook.com/BigME/Subscription/api/v1/client/subscribe?token=2d85c5bb05dbab1fef2438dc3e52495d"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|美国|US|USA|优先|新加坡|SG|SGP"
-    filter: "^(?=.*三网)(?=.*HK|.*TW|.*SG|.*KR).*$"
+    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP|美国|US|USA"
+    filter: "^(?=.*三网)(?=.*HK|.*TW|.*SG|.*KR|.*US).*$"
     override:
       additional-prefix: "BigME |"
   OceanCloud:
     <<: *p
     url: "https://cdn.hugehard.art/api/d2a0b8fec95c7eca74597fd1d825580a"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|美国|US|USA|穿透|新加坡|SG|SGP"
+    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|穿透|新加坡|SG|SGP|美国|US|USA"
     filter: ".*"
     override:
       additional-prefix: "Ocean |"
@@ -120,22 +119,33 @@ experimental:
 
 proxy-groups:
   # 应用策略组
-  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *rn}
+  - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *fb}
   - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
-  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *bf}
+  - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *fb}
   - {name: NETFLIX, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/netflix(red).png, <<: *pr}
   - {name: TikTok, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/tiktok.png, type: select, proxies: [韩国]}
   - {name: Apple, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/apple.png, <<: *pr}
-  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *bf}
-  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *rn}
+  - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *fb}
+  - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *fb}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
-  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *bf}
-  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *bf}
+  - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *fb}
+  - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *fb}
   - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
   - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *pr}
-  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, type: select, proxies: [DIRECT]}
+  - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *fb}
+  - name: 美国
+    type: fallback
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - BitsFlow
+      - RackNerd
+    use: [BigME, OceanCloud]
+    filter: "^(?=.*BitsFlow)|(?=.*RackNerd).*$"
+    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
+    
   - name: 韩国
     type: url-test
     url: https://www.gstatic.com/generate_204
@@ -153,11 +163,13 @@ proxy-groups:
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
 
   - name: 香港
-    type: url-test
+    type: fallback
     url: https://www.gstatic.com/generate_204
     interval: 300
+    proxies:
+      - HNCloud
     use: [BigME, OceanCloud]
-    filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
+    filter: "^(?=.*HNCloud)|(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
@@ -293,3 +305,4 @@ rule-providers:
   ecs-no-cn:
     <<: *domaintxt
     url: "https://raw.githubusercontent.com/JohnsonRan/CRules/master/rules/ecs-no-cn.txt"
+
