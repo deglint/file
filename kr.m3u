@@ -40,10 +40,10 @@ https://backup.760515.xyz/playlist/KBS2-playlist.m3u8
 https://news24.gscdn.kbs.co.kr/news24-02/news24-02_hd.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9uZXdzMjQuZ3NjZG4ua2JzLmNvLmtyL25ld3MyNC0wMi8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzg0MTgxNTY2fX19XX0_&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=Tjf9qMvSbBfjMpg61cGWKmuUPnQlFFx44caoT0iXeuwQ8lJE-Za0FOMGRSv1n~Q0lEHbuO8JTLrhiPspEBPfCFOu4ZTFUhbGePpYpu1dn9CvDPyU2cA4TGjbvUOdoIU2W5A38F-MoEUX4vgemVTZpitcqc-hHmROjY3WKPXJCO9Cu1qtk8ZAlra0ZJ38yJDDBMfMeRkMavawhEQ76DojsGoyvH0Bt4Szcc93Y-oanMRTIIziBvZtBMkNUJybSobUMPvGnAK5ysb1hLnom50OI5m6p8HMOis1I9X39u15j-PrJXVWY~1n9L-99VFzNF6uqEnVl27Nw~6B7eJXzS9Zmg__
 
 #EXTINF:-1 tvg-id="504.lg" tvg-logo="https://backup.760515.xyz/logo/SBS.png" group-title="뉴스",SBS
-https://tvlive.sbs.co.kr/sbsch6/sbsch61.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQwMTYwNDIsInBhdGgiOiIvc2JzY2g2MS5zdHJlYW0iLCJkdXJhdGlvbiI6LTEsInVubyI6ImY3NzViNTMzLTQzNDAtNDY0OC04YTE5LTM5OWQ2ODBiNTY2OCIsImlhdCI6MTc4NDAwODg0Mn0.3y_VgJ36Qb_4CyKmOyt2EU8CxcP7NUhy4v0FnCOhKlU
+https://tvlive.sbs.co.kr/sbsch6/sbsch61.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQwMjY4MDIsInBhdGgiOiIvc2JzY2g2MS5zdHJlYW0iLCJkdXJhdGlvbiI6LTEsInVubyI6ImYxNTRiZmIwLWI1NmYtNDNiOS1hMmI2LTRlZDUyY2E2ZmM1NyIsImlhdCI6MTc4NDAxOTYwMn0.3ib0kY8NzQVJvGJ3rCl4gycKWTcw5Jjyq19cwPce4jQ
 
 #EXTINF:-1 tvg-id="612.lg" tvg-logo="https://backup.760515.xyz/logo/SBS플러스.png" group-title="뉴스",SBS플러스
-https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQwMTYwNDUsInBhdGgiOiIvc2JzcGx1czEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI0N2VjNGZiZC0zYjRlLTRhNmMtOTE0ZS0xMDk4ZDM1NDgwYzgiLCJpYXQiOjE3ODQwMDg4NDV9.Lv-xT2jGvsK2YIZ6IYc5XdYDGrI3Eq52ezf3xYXk8Wg
+https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQwMjY4MDUsInBhdGgiOiIvc2JzcGx1czEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI3Njk2OWQ4YS0yM2IyLTRlYzUtYTBjOS05YTYwYTFjZDA3ZTMiLCJpYXQiOjE3ODQwMTk2MDV9.Nk_CTd6l9WzyYyXzFZ7XSgpQCI_SDFxvANmgZT5oUJw
 
 #EXTINF:-1 tvg-id="503.lg" tvg-logo="https://backup.760515.xyz/logo/MBC.png" group-title="뉴스",MBC
 https://backup.760515.xyz/playlist/MBC-playlist.m3u8
@@ -67,4 +67,4 @@ https://backup.760515.xyz/playlist/채널A-playlist.m3u8
 https://backup.760515.xyz/playlist/채널A플러스-playlist.m3u8
 
 #EXTINF:-1 tvg-id="616.lg" tvg-logo="https://backup.760515.xyz/logo/SBS Biz.png" group-title="경제",SBS Biz
-https://tvlive.sbs.co.kr/sbscnbc/sbscnbc1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQwMTYwNDgsInBhdGgiOiIvc2JzY25iYzEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiJjYTc3M2I0NS03N2JmLTRkMWItOTJjZS0yMTQzNzVkNTE3ZjgiLCJpYXQiOjE3ODQwMDg4NDh9.PW2IWmAl4mgltceV7_ylyKgOaqQlBbpNyEKvzNK7Efs
+https://tvlive.sbs.co.kr/sbscnbc/sbscnbc1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQwMjY4MDgsInBhdGgiOiIvc2JzY25iYzEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI5MTI0YTA5NC0zNzQ4LTRjMzYtYTM3MS0yNmNhNjMyMmFiMWEiLCJpYXQiOjE3ODQwMTk2MDh9.e3qDILJOqqwCh4nkrnhYlSf-3M_KtV7o8z6x8W2UxEk
