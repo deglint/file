@@ -40,10 +40,10 @@ https://backup.760515.xyz/playlist/KBS2-playlist.m3u8
 https://news24.gscdn.kbs.co.kr/news24-02/news24-02_hd.m3u8?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9uZXdzMjQuZ3NjZG4ua2JzLmNvLmtyL25ld3MyNC0wMi8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzg0Mjg5NTY1fX19XX0_&Key-Pair-Id=APKAICDSGT3Y7IXGJ3TA&Signature=VAHbV1cg8gk8l~KmJM4s105dUYShU-ct6YIGVMvbbugCwGajtJvGqzXngET70kfL0ZivLkbU1Qb~fieE-1rUuoKrk9~85-nmkMqBQbBc55I8ptrlTpsoc-Iw0JO-bwbZhBjfySGEFqjDjItPFWnwHWcZq06Jt05YRj~tyoeqDvv~98ycAYLUQk7URX76QV91kXGaqWCvGHydWPPoYBmzVkeCgz5fleoI6ISidioCQxBg~J7v7mo-zEsumX8KyTHgIbrwgXba8vUZnaFCLWjDadfGTA9Ywj6tUjfBNxv6zQzVnjguuBnuwy2RMxupzVyWEdcBbk~v-54YWd8LloCRqQ__
 
 #EXTINF:-1 tvg-id="504.lg" tvg-logo="https://backup.760515.xyz/logo/SBS.png" group-title="뉴스",SBS
-https://tvlive.sbs.co.kr/sbsch6/sbsch61.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQxMzQ4MDEsInBhdGgiOiIvc2JzY2g2MS5zdHJlYW0iLCJkdXJhdGlvbiI6LTEsInVubyI6ImViNWU5ZTc5LWM1ZDQtNGEwYi05MjkyLTUxOWNjODRhYjFhZiIsImlhdCI6MTc4NDEyNzYwMX0.yjhzqKt7MzXxvC8RqS1AfC2nKRbqPTBk1jmtHrMk3dE
+https://tvlive.sbs.co.kr/sbsch6/sbsch61.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQxMzg0MDIsInBhdGgiOiIvc2JzY2g2MS5zdHJlYW0iLCJkdXJhdGlvbiI6LTEsInVubyI6IjdkZTZiZDIwLWJkMTMtNGIxNy1hNTJhLThhNzQ5OTRmYjVlOSIsImlhdCI6MTc4NDEzMTIwMn0.SCnXkIwOEgeGjD5fOlWIzLyZiH1xL3GT6TzOXdEYlVA
 
 #EXTINF:-1 tvg-id="612.lg" tvg-logo="https://backup.760515.xyz/logo/SBS플러스.png" group-title="뉴스",SBS플러스
-https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQxMzQ4MDQsInBhdGgiOiIvc2JzcGx1czEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI5MWZlNWE3NC03NGY2LTQ5NjYtYTlkNy1jYmRkOWE4NWM5NDAiLCJpYXQiOjE3ODQxMjc2MDR9.-k96df8v6wxoZZGLbPsyZMbpWdhFjnqe5TD9I3-Box0
+https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQxMzg0MDcsInBhdGgiOiIvc2JzcGx1czEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI0NzU5NTEwNy02OGFkLTQwOWQtOTkzNC1hYzFiMmM2M2JlYjMiLCJpYXQiOjE3ODQxMzEyMDd9.7x51ojewbRLqx13crjZVaswJBQafuJoX3tAPfE_UZH4
 
 #EXTINF:-1 tvg-id="503.lg" tvg-logo="https://backup.760515.xyz/logo/MBC.png" group-title="뉴스",MBC
 https://backup.760515.xyz/playlist/MBC-playlist.m3u8
