@@ -43,7 +43,7 @@ https://news24.gscdn.kbs.co.kr/news24-02/news24-02_hd.m3u8?Policy=eyJTdGF0ZW1lbn
 https://tvlive.sbs.co.kr/sbsch6/sbsch61.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQ3MzI0MDIsInBhdGgiOiIvc2JzY2g2MS5zdHJlYW0iLCJkdXJhdGlvbiI6LTEsInVubyI6ImQwYzYzYzU1LTBmY2ItNDg2Mi04MGVlLWVjODliYWJlMDMzMiIsImlhdCI6MTc4NDcyNTIwMn0.Gx_4d-kjFJhAAM1H3YFxxHDem3NRFHaytg1tZKStSxQ
 
 #EXTINF:-1 tvg-id="612.lg" tvg-logo="https://backup.760515.xyz/logo/SBS플러스.png" group-title="뉴스",SBS플러스
-https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQ3MzI0MDUsInBhdGgiOiIvc2JzcGx1czEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI3ZDE5YTAxYi03ZmEzLTQ3MGEtYTVhOC0yMWQ0ZWRmNTVlZTUiLCJpYXQiOjE3ODQ3MjUyMDV9.KBLXFRLTcrFbTG046Yt7xn_LfkXi0B_snOucD_4CU54
+https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQ3MzYwMTAsInBhdGgiOiIvc2JzcGx1czEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiJmZGYwZDZhZC03ZjBmLTRjNzktYTM5Ny04OWMyNjVmN2YxZDgiLCJpYXQiOjE3ODQ3Mjg4MTB9.VSAb--d1wqdWS4ZwWxOv5Lwoq3uFNbQV4R2e_clpT3w
 
 #EXTINF:-1 tvg-id="503.lg" tvg-logo="https://backup.760515.xyz/logo/MBC.png" group-title="뉴스",MBC
 https://backup.760515.xyz/playlist/MBC-playlist.m3u8
@@ -67,4 +67,4 @@ https://backup.760515.xyz/playlist/채널A-playlist.m3u8
 https://backup.760515.xyz/playlist/채널A플러스-playlist.m3u8
 
 #EXTINF:-1 tvg-id="616.lg" tvg-logo="https://backup.760515.xyz/logo/SBS Biz.png" group-title="경제",SBS Biz
-https://tvlive.sbs.co.kr/sbscnbc/sbscnbc1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQ3MzI0MDgsInBhdGgiOiIvc2JzY25iYzEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI2NjliNzc5ZS03MTVjLTRmOTQtYmQ4MC1iYjRmMjY0NDkwZDIiLCJpYXQiOjE3ODQ3MjUyMDh9.OlEk92HGUBTMs8L2CtIAoA8egcSaGZ2gNChEd9hXqnk
+https://tvlive.sbs.co.kr/sbscnbc/sbscnbc1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODQ3MzYwMTMsInBhdGgiOiIvc2JzY25iYzEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiIxMzA2ZjlkOC1jMjM2LTQwOTEtOGMyYi1mY2M4NWI2MTg2NTMiLCJpYXQiOjE3ODQ3Mjg4MTN9.ZNYdMuywYr8iRifCn3ebDG5gFPagyIZqZ3YOHIpwfAA
