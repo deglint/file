@@ -168,7 +168,7 @@ proxy-groups:
     proxies:
       - HNCloud
     use: [BigME, OceanCloud]
-    filter: "^(?=.*HNCloud)|(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
+    filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
