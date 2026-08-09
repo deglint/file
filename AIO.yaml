@@ -139,10 +139,11 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - BitsFlow
+      - CloudSilk
       - RackNerd
+      - RackNerd-IPv4
     use: [BigME, OceanCloud]
-    filter: "^(?=.*BitsFlow)|(?=.*RackNerd).*$"
+    filter: "^(?=.*CloudSilk)|(?=.*RackNerd)|(?=.*RackNerd-IPv4).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
   - name: 韩国
