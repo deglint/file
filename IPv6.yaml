@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, RackNerd, RackNerd-IPv4, CloudSilk]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [BitsFlow, CloudSilk, RackNerd, RackNerd-IPv4]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [RackNerd, RackNerd-IPv4, CloudSilk]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk, RackNerd, RackNerd-IPv4]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -11,7 +11,6 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
-  - {name: BitsFlow, type: ss, server: 2604:a840:100:84::a, port: 12345, password: "HmU66HXMQ270tnJUHEaiykQevb59A1dTJPYGemmlRcI=", cipher: 2022-blake3-chacha20-poly1305, udp: true}
   - {name: RackNerd, type: ss, server: 2607:9d00:2000:020a::3eec:bd85, port: 41919, password: "aFkGPduTY33izO+cjzyL7A==", cipher: 2022-blake3-aes-128-gcm, udp: true}
   - {name: RackNerd-IPv4, type: hysteria2, server: 192.119.76.178, port: 35606, password: e0e6ad00, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: CloudSilk, type: vless, server: 37.123.193.151, port: 19603, uuid: "1733f8e2-01bf-4e16-9f28-40f3f47328b5", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.paypal.com, client-fingerprint: chrome, reality-opts: {public-key: iVq9cwb1bYx9ktSRT5UjbHxdoiSFXWHXxV_G7cNKmwQ}}
