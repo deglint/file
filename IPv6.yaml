@@ -15,7 +15,8 @@ proxies:
   - {name: GreenC-IPv6, type: ss, server: 2a11:3:700:161::a, port: 23456, password: "bOm6cF+/Rhc6Q95AEYI29B46XNNa8FAqiUP6xiCL2gc=", cipher: 2022-blake3-aes-256-gcm, udp: true}
   # GreenC（VLESS-REALITY，使用 IPv4）
   - {name: GreenC, type: vless, server: 193.177.221.199, port: 4912, uuid: "2b57f1d3-fe7f-4f6e-98b8-f75cd90ed70d", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: QdIsSMDlU7L2sCSLXxnz2tw6_optJKrzA_cxR4LaCz0}}
-
+  - {name: CloudSilk, type: vless, server: 37.123.193.151, port: 19603, uuid: "1733f8e2-01bf-4e16-9f28-40f3f47328b5", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.paypal.com, client-fingerprint: chrome, reality-opts: {public-key: iVq9cwb1bYx9ktSRT5UjbHxdoiSFXWHXxV_G7cNKmwQ}}
+  
 # 订阅提供者（保持不变）
 proxy-providers:
   BigME:
