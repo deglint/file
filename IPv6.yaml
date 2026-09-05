@@ -1,6 +1,6 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [GreenC-IPv6, GreenC, CloudSilk]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [GreenC, CloudSilk, GreenC-IPv6]}
 fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [GreenC, CloudSilk, GreenC-IPv6]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
