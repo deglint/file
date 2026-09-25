@@ -47,6 +47,7 @@ https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiO
 
 #EXTINF:-1 tvg-id="503.lg" tvg-logo="https://backup.760515.xyz/logo/MBC.png" group-title="뉴스",MBC
 https://backup.760515.xyz/playlist/MBC-playlist.m3u8
+http://vod.mpmbc.co.kr:1935/live/encoder-tv/playlist.m3u8
 
 #EXTINF:-1 tvg-id="C00593.tving" tvg-logo="https://pjytv.760515.xyz/logo/YTN.png" group-title="뉴스",YTN
 https://backup.760515.xyz/playlist/YTN-playlist.m3u8
