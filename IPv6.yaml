@@ -143,7 +143,7 @@ proxy-groups:
     proxies:
       - GreenC-IPv6
     use: [BigME, OceanCloud]
-    filter: "^(?=.*BitsFlow)|(?=.*GreenC-IPv6).*$"
+    filter: "^(?=.*BitsFlow)|(?=.*GreenC).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
   - name: 韩国
