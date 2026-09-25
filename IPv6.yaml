@@ -141,7 +141,7 @@ proxy-groups:
     url: https://www.gstatic.com/generate_204
     interval: 300
     proxies:
-      - GreenC-IPv6
+      - GreenC
     use: [BigME, OceanCloud]
     filter: "^(?=.*BitsFlow)|(?=.*GreenC).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
