@@ -142,6 +142,7 @@ proxy-groups:
     interval: 300
     proxies:
       - GreenC
+      - CloudSilk
     use: [BigME, OceanCloud]
     filter: "^(?=.*CloudSilk)|(?=.*GreenC).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
