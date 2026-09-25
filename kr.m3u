@@ -46,7 +46,6 @@ https://tvlive.sbs.co.kr/sbsch6/sbsch61.stream/playlist.m3u8?token=eyJ0eXAiOiJKV
 https://tvlive.sbs.co.kr/sbspluspc/sbsplus1.stream/playlist.m3u8?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTAzMzA0MDUsInBhdGgiOiIvc2JzcGx1czEuc3RyZWFtIiwiZHVyYXRpb24iOi0xLCJ1bm8iOiI0NzFlYmEwYy1mNzE4LTQ1YzAtYWJlOC1jOWYwZDQzYjc2ODQiLCJpYXQiOjE3OTAzMjMyMDV9.CA9Flos4iDE0t_EDmYYZBEnBSHOL8K6Gol0oRQ7czrg
 
 #EXTINF:-1 tvg-id="503.lg" tvg-logo="https://backup.760515.xyz/logo/MBC.png" group-title="뉴스",MBC
-https://backup.760515.xyz/playlist/MBC-playlist.m3u8
 http://vod.mpmbc.co.kr:1935/live/encoder-tv/playlist.m3u8
 
 #EXTINF:-1 tvg-id="C00593.tving" tvg-logo="https://pjytv.760515.xyz/logo/YTN.png" group-title="뉴스",YTN
