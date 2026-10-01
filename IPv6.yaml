@@ -175,7 +175,6 @@ rules:
   - DOMAIN-SUFFIX,bigmelook.com,Emby
   - DOMAIN-SUFFIX,oceancloud.asia,Emby
   - DOMAIN-SUFFIX,imbc.com,韩国
-  - DOMAIN-KEYWORD,MBC-playlist,韩国
   - DOMAIN-SUFFIX,mpmbc.co.kr,韩国
   - DOMAIN-SUFFIX,pandalive.co,PandaTV
   - RULE-SET,biliintl,台湾
