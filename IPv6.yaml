@@ -143,9 +143,9 @@ proxy-groups:
     proxies:
       - CloudSilk 9929
       - CloudSilk 4837
+      - RackNerd
       - HostDZire-IPv6
       - HostDZire
-      - RackNerd
     use: [BigME, OceanCloud]
     filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*HostDZire-IPv6)|(?=.*HostDZire)|(?=.*RackNerd).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
