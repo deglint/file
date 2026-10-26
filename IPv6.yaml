@@ -13,6 +13,7 @@ proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: CloudSilk 4837, type: vless, server: 37.123.193.151, port: 40447, uuid: "e7defc68-be60-439f-acbc-1e02d64bbc17", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: TAIGnBSvJe5bR5tr1UdqehqXn-fXvI5HD7LCUrXLiyA}}
   - {name: CloudSilk 9929, type: vless, server: 185.148.14.129, port: 43312, uuid: "a36b2ca3-541e-410e-b4a6-fcd1228febfa", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: RCcehZQs-T12RL8Euw0bl3LspNFUk3_iTf4wAWKhWn4}}
+  - {name: HostDZire, type: hysteria2, server: 2607:f5b4:88:103:1c00:1dff:fe00:cd, port: 3354, password: 148fb069, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: RackNerd, type: hysteria2, server: "2607:9d00:2000:020a::3eec:bd85", port: 33327, password: defd1497, sni: www.bing.com, skip-cert-verify: true, udp: true}
   
 # 订阅提供者（保持不变）
