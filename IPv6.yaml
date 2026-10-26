@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, HostDZire, RackNerd]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, HostDZire, RackNerd]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -142,9 +142,10 @@ proxy-groups:
     proxies:
       - CloudSilk 9929
       - CloudSilk 4837
+      - HostDZire
       - RackNerd
     use: [BigME, OceanCloud]
-    filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*RackNerd).*$"
+    filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*HostDZire)|(?=.*RackNerd).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
   - name: 韩国
