@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, HostDZire-IPv6, HostDZire, RackNerd]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, HostDZire-IPv6, HostDZire, RackNerd]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd, HostDZire-IPv6, HostDZire]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd, HostDZire-IPv6, HostDZire]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
