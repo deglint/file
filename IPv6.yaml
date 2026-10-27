@@ -176,8 +176,8 @@ proxy-groups:
     
 rules:
   - DOMAIN-SUFFIX,bigmelook.com,Emby
-  - DOMAIN-SUFFIX,hxd.as174.de,Emby
-  - DOMAIN-SUFFIX,9kg.hxdemby.com,Emby
+  - DOMAIN-SUFFIX,as174.de,Emby
+  - DOMAIN-SUFFIX,hxdemby.com,Emby
   - DOMAIN-SUFFIX,oceancloud.asia,Emby
   - DOMAIN-SUFFIX,imbc.com,韩国
   - DOMAIN-SUFFIX,pandalive.co,PandaTV
