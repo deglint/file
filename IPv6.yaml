@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd, Rabisu]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd, Rabisu]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RakSmart, RackNerd, Rabisu]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RakSmart, RackNerd, Rabisu]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -15,6 +15,7 @@ proxies:
   - {name: CloudSilk 9929, type: vless, server: 185.148.14.129, port: 43312, uuid: "a36b2ca3-541e-410e-b4a6-fcd1228febfa", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: RCcehZQs-T12RL8Euw0bl3LspNFUk3_iTf4wAWKhWn4}}
   - {name: RackNerd, type: hysteria2, server: 2607:9d00:2000:020a::3eec:bd85, port: 33327, password: defd1497, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: Rabisu, type: hysteria2, server: 142.249.78.7, port: 10696, password: 367513f0, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: RakSmart, type: vless, server: 137.175.71.177, port: 52168, uuid: "9c6e6ee4-eaf2-42b2-8162-24356b4d3559", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: lMjg9qWwU21c5kvGVzyStbvQ9Meg6gvPAAK9qIR-50A}}
   
 # 订阅提供者（保持不变）
 proxy-providers:
@@ -142,10 +143,11 @@ proxy-groups:
     proxies:
       - CloudSilk 9929
       - CloudSilk 4837
+      - RakSmart
       - RackNerd
       - Rabisu
     use: [BigME, OceanCloud]
-    filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*RackNerd)|(?=.*Rabisu).*$"
+    filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*RakSmart)|(?=.*RackNerd)|(?=.*Rabisu).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
   - name: 韩国
