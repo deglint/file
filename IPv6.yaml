@@ -16,7 +16,7 @@ proxies:
   - {name: RackNerd, type: hysteria2, server: 2607:9d00:2000:020a::3eec:bd85, port: 33327, password: defd1497, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: Rabisu, type: hysteria2, server: 142.249.78.7, port: 10696, password: 367513f0, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: RakSmart, type: vless, server: 137.175.71.177, port: 52168, uuid: "9c6e6ee4-eaf2-42b2-8162-24356b4d3559", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: lMjg9qWwU21c5kvGVzyStbvQ9Meg6gvPAAK9qIR-50A}}
-  - {name: LucidaCloud, type: vless, server: 2001:df1:7880:6::7b5, port: 4886, uuid: "2bd3b50f-6198-4a68-bbb3-652f7969e379", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: aws.amazon.com, client-fingerprint: chrome, reality-opts: {public-key: 7SxQvrtGf260kgJIQYNfu5G_jcsFnoKe1htmhKI17Bw}}
+  - {name: LucidaCloud, type: hysteria2, server: 2607:9d00:2000:020a::3eec:bd85, port: 7927, password: 91464ace, sni: www.bing.com, skip-cert-verify: true, udp: true}
 # 订阅提供者（保持不变）
 proxy-providers:
   BigME:
