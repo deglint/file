@@ -156,7 +156,6 @@ rules:
   - RULE-SET,google_site,Google
   - RULE-SET,google_ip,Google
   - RULE-SET,category-porn,Porns
-  - RULE-SET,bilibili,Bilibili
   - RULE-SET,tg_site,Telegram
   - RULE-SET,tg_ip,Telegram
   - RULE-SET,github,Github
@@ -208,9 +207,6 @@ rule-providers:
   category-cngames:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/category-games@cn.mrs"
-  bilibili:
-    <<: *mrs
-    url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/bilibili.mrs"
   tg_ip:
     <<: *mrsip
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/telegram.mrs"
