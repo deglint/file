@@ -1,7 +1,7 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
+pr: &pr {type: select, proxies: [美国, 香港, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 香港, DIRECT]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 香港, DIRECT]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -16,22 +16,6 @@ proxies:
   - {name: RackNerd, type: hysteria2, server: 2607:9d00:2000:020a::3eec:bd85, port: 33327, password: defd1497, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: Rabisu, type: hysteria2, server: 142.249.78.7, port: 10696, password: 367513f0, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BageVM, type: vless, server: 209.33.160.122, port: 39098, uuid: "7852e4df-db54-4f75-a35e-3b8fbe89e56d", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: DtOZ39u6MyQMG96tl13-M7-HeaqQzW2RLBVPk9py-Vg}}
-# 订阅提供者（保持不变）
-proxy-providers:
-  BigME:
-    <<: *p
-    url: "https://api0.bigmelook.com/BigME/Subscription/api/v1/client/subscribe?token=2d85c5bb05dbab1fef2438dc3e52495d"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP|美国|US|USA"
-    filter: "^(?=.*HK|.*TW|.*SG|.*KR|.*US).*$"
-    override:
-      additional-prefix: "BigME |"
-  OceanCloud:
-    <<: *p
-    url: "https://cdn.hugehard.art/api/d2a0b8fec95c7eca74597fd1d825580a"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|穿透|新加坡|SG|SGP|美国|US|USA"
-    filter: ".*"
-    override:
-      additional-prefix: "Ocean |"
 
 mixed-port: 7890
 ipv6: true
@@ -120,18 +104,15 @@ experimental:
 proxy-groups:
   # 应用策略组
   - {name: Emby, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/emby.png, <<: *fb}
-  - {name: PandaTV, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/pandaTV.png, type: select, proxies: [韩国, DIRECT]}
   - {name: Spotify, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/spotify(green).png, <<: *pr}
   - {name: AI, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/ChatGPT-green.png, <<: *fb}
   - {name: NETFLIX, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/netflix(red).png, <<: *pr}
-  - {name: TikTok, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/tiktok.png, type: select, proxies: [韩国]}
   - {name: Apple, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/apple.png, <<: *pr}
   - {name: Github, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/github.png, <<: *fb}
   - {name: Telegram, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/telegram(blue1).png, <<: *fb}
   - {name: Google, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/google(1).png, <<: *pr}
   - {name: YouTube, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/youtube.png, <<: *fb}
   - {name: Porns, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/yuyanyun.png, <<: *fb}
-  - {name: Bilibili, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/bilibili(1).png, type: select, proxies: [DIRECT, 台湾]}
   - {name: Microsoft, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/microsoft.png, <<: *pr}
   - {name: Speedtest, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/speedtest.png, <<: *pr}
   - {name: MATCH, icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/shutiao.png, <<: *pr}
@@ -144,25 +125,8 @@ proxy-groups:
       - CloudSilk 4837
       - RackNerd
       - Rabisu
-    use: [BigME, OceanCloud]
     filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*RackNerd)|(?=.*Rabisu).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
-    
-  - name: 韩国
-    type: url-test
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-    use: [BigME, OceanCloud]
-    filter: "^(?=.*韩国)|(?=.*KR).*$"
-    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Korea(2).png
-  
-  - name: 台湾
-    type: url-test
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-    use: [BigME, OceanCloud]
-    filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
-    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
 
   - name: 香港
     type: fallback
@@ -170,8 +134,7 @@ proxy-groups:
     interval: 300
     proxies:
       - BageVM
-    use: [BigME, OceanCloud]
-    filter: "^(?=.*BageVM)|(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
+    filter: "^(?=.*BageVM).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
@@ -179,10 +142,6 @@ rules:
   - DOMAIN-SUFFIX,as174.de,Emby
   - DOMAIN-SUFFIX,hxdemby.com,Emby
   - DOMAIN-SUFFIX,oceancloud.asia,Emby
-  - DOMAIN-SUFFIX,imbc.com,韩国
-  - DOMAIN-SUFFIX,pandalive.co,PandaTV
-  - RULE-SET,biliintl,台湾
-  - RULE-SET,bahamut,台湾
   - DOMAIN-SUFFIX,gemini.google.com,AI
   - DST-PORT,3478/19302,DIRECT
   - GEOIP,lan,LAN,no-resolve
@@ -231,9 +190,6 @@ rule-providers:
   ai:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/openai.mrs"
-  biliintl:
-    <<: *mrs
-    url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/biliintl.mrs"
   tracker:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/tracker.mrs"
@@ -270,9 +226,6 @@ rule-providers:
   win-update:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/win-update.mrs"
-  bahamut:
-    <<: *mrs
-    url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/bahamut.mrs"
   cn_site:
     <<: *mrs
     url: "https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/cn.mrs"
