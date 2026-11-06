@@ -12,7 +12,7 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: CloudSilk 4837, type: hysteria2, server: 37.123.193.151, port: 4942, password: 9263c76e, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: CloudSilk 9929, type: hysteria2, server: 185.148.14.129, port: 20237, password: 8f2ee758, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: CloudSilk 9929, type: hysteria2, server: 185.148.14.129, port: 17943, password: e64da9e4-c70a-4b98-ab07-376d033b0278, sni: www.bing.com, alpn: [h3], skip-cert-verify: true, fingerprint: "9884EA6CB64D40FDCF3202F7FEF8FE1A606C4346A8CD7AFA44C98E8638934AD6", udp: true}
   - {name: RackNerd, type: hysteria2, server: 2607:9d00:2000:020a::3eec:bd85, port: 33327, password: defd1497, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: Rabisu, type: hysteria2, server: 142.249.78.7, port: 10696, password: 367513f0, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BageVM, type: vless, server: 2a14:4900:2207:8da::4b7, port: 39098, uuid: "7852e4df-db54-4f75-a35e-3b8fbe89e56d", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: DtOZ39u6MyQMG96tl13-M7-HeaqQzW2RLBVPk9py-Vg}}
