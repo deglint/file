@@ -18,20 +18,13 @@ proxies:
   
 # 订阅提供者（保持不变）
 proxy-providers:
-  BigME:
+  1Cent:
     <<: *p
     url: "https://api0.bigmelook.com/BigME/Subscription/api/v1/client/subscribe?token=2d85c5bb05dbab1fef2438dc3e52495d"
     exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP|美国|US|USA"
     filter: "^(?=.*HK|.*TW|.*SG|.*KR|.*US).*$"
     override:
-      additional-prefix: "BigME |"
-  OceanCloud:
-    <<: *p
-    url: "https://cdn.hugehard.art/api/d2a0b8fec95c7eca74597fd1d825580a"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|穿透|新加坡|SG|SGP|美国|US|USA"
-    filter: ".*"
-    override:
-      additional-prefix: "Ocean |"
+      additional-prefix: "1Cent |"
 
 mixed-port: 7890
 ipv6: true
@@ -142,17 +135,16 @@ proxy-groups:
     proxies:
       - CloudSilk 9929
       - CloudSilk 4837
-      - RackNerd
       - Rabisu
-    use: [BigME, OceanCloud]
-    filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*RackNerd)|(?=.*Rabisu).*$"
+    use: [1Cent]
+    filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*Rabisu).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
     
   - name: 韩国
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [BigME, OceanCloud]
+    use: [1Cent]
     filter: "^(?=.*韩国)|(?=.*KR).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Korea(2).png
   
@@ -160,7 +152,7 @@ proxy-groups:
     type: url-test
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [BigME, OceanCloud]
+    use: [1Cent]
     filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
 
@@ -168,7 +160,7 @@ proxy-groups:
     type: fallback
     url: https://www.gstatic.com/generate_204
     interval: 300
-    use: [BigME, OceanCloud]
+    use: [1Cent]
     filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
