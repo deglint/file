@@ -1,7 +1,7 @@
 # 策略组相关
 pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd, Rabisu]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [CloudSilk 9929, CloudSilk 4837, RackNerd, Rabisu]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -12,15 +12,14 @@ p: &p {type: http, interval: 86400, health-check: {enable: true, url: https://ww
 proxies:
   - {name: LAN, type: direct, udp: true, interface-name: br-lan}
   - {name: CloudSilk 4837, type: hysteria2, server: 37.123.193.151, port: 4942, password: 9263c76e, sni: www.bing.com, skip-cert-verify: true, udp: true}
-  - {name: CloudSilk 9929, type: vless, server: 185.148.14.129, port: 43312, uuid: "a36b2ca3-541e-410e-b4a6-fcd1228febfa", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: www.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: RCcehZQs-T12RL8Euw0bl3LspNFUk3_iTf4wAWKhWn4}}
-  - {name: RackNerd, type: hysteria2, server: 192.119.76.178, port: 33327, password: defd1497, sni: www.bing.com, skip-cert-verify: true, udp: true}
+  - {name: CloudSilk 9929, type: hysteria2, server: 185.148.14.129, port: 58117, password: affd2c81, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: Rabisu, type: hysteria2, server: 142.249.78.7, port: 10696, password: 367513f0, sni: www.bing.com, skip-cert-verify: true, udp: true}
   
 # 订阅提供者（保持不变）
 proxy-providers:
   1Cent:
     <<: *p
-    url: "https://api0.bigmelook.com/BigME/Subscription/api/v1/client/subscribe?token=2d85c5bb05dbab1fef2438dc3e52495d"
+    url: "https://yfjc.xyz/api/v1/client/subscribe?token=ea3ae631391c65733ce137e83b5eea10"
     exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP|美国|US|USA"
     filter: "^(?=.*HK|.*TW|.*SG|.*KR|.*US).*$"
     override:
