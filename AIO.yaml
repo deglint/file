@@ -1,7 +1,7 @@
 # 策略组相关
-pr: &pr {type: select, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
-fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 韩国, 台湾, 香港, DIRECT]}
+pr: &pr {type: select, proxies: [美国, 香港, DIRECT]}
+auto: &auto {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 香港, DIRECT]}
+fb: &fb {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, proxies: [美国, 香港, DIRECT]}
 url-test: &url-test {type: url-test, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: false, use: [], exclude-filter: "LAN"}
 fallback: &fallback {type: fallback, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, exclude-filter: "LAN"}
 load-balance: &load-balance {type: load-balance, url: https://www.gstatic.com/generate_204, interval: 300, include-all-providers: true, strategy: sticky-sessions, exclude-filter: "LAN"}
@@ -138,22 +138,6 @@ proxy-groups:
     use: [1Cent]
     filter: "^(?=.*CloudSilk 4837)|(?=.*CloudSilk 9929)|(?=.*Rabisu).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/US(1).png
-    
-  - name: 韩国
-    type: url-test
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-    use: [1Cent]
-    filter: "^(?=.*韩国)|(?=.*KR).*$"
-    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Korea(2).png
-  
-  - name: 台湾
-    type: url-test
-    url: https://www.gstatic.com/generate_204
-    interval: 300
-    use: [1Cent]
-    filter: "^(?=.*台湾)|(?=.*TW)|(?=.*TWN).*$"
-    icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/taiwan.png
 
   - name: 香港
     type: fallback
