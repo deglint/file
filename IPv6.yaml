@@ -16,7 +16,7 @@ proxies:
   - {name: RackNerd, type: hysteria2, server: 2607:9d00:2000:020a::3eec:bd85, port: 33327, password: defd1497, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: Rabisu, type: hysteria2, server: 142.249.78.7, port: 10696, password: 367513f0, sni: www.bing.com, skip-cert-verify: true, udp: true}
   - {name: BageVM, type: vless, server: 2a14:4900:2207:8da::4b7, port: 39098, uuid: "7852e4df-db54-4f75-a35e-3b8fbe89e56d", flow: xtls-rprx-vision, network: tcp, tls: true, udp: true, servername: dash.cloudflare.com, client-fingerprint: chrome, reality-opts: {public-key: DtOZ39u6MyQMG96tl13-M7-HeaqQzW2RLBVPk9py-Vg}}
-
+  - {name: RakSmart, type: hysteria2, server: 107.149.103.32, port: 3189, password: bad3698b, sni: www.bing.com, skip-cert-verify: true, udp: true}
 mixed-port: 7890
 ipv6: true
 log-level: error
@@ -134,7 +134,8 @@ proxy-groups:
     interval: 300
     proxies:
       - BageVM
-    filter: "^(?=.*BageVM).*$"
+      - RakSmart
+    filter: "^(?=.*BageVM)|(?=.*RakSmart).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
