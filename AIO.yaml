@@ -20,7 +20,7 @@ proxy-providers:
   1Cent:
     <<: *p
     url: "https://yfjc.xyz/api/v1/client/subscribe?token=ea3ae631391c65733ce137e83b5eea10"
-    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|hy2|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP|美国|US|USA"
+    exclude-filter: "官网|剩余|流量|套餐|免费|订阅|直连|到期时间|GB|Expire Date|Traffic|ExpireDate|(0\\.\\d+)|日本|JP|JPN|优先|新加坡|SG|SGP|美国|US|USA"
     filter: "^(?=.*HK|.*TW|.*SG|.*KR|.*US).*$"
     override:
       additional-prefix: "1Cent |"
