@@ -143,10 +143,8 @@ proxy-groups:
     type: fallback
     url: https://www.gstatic.com/generate_204
     interval: 300
-    proxies:
-      - BageVM
-      - RakSmart
-    filter: "^(?=.*BageVM)|(?=.*RakSmart).*$"
+    use: [1Cent]
+    filter: "^(?=.*香港)|(?=.*HK)|(?=.*HKG).*$"
     icon: https://gh-proxy.com/https://github.com/JohnsonRan/icon/raw/main/icon/Hongkong(2).png
     
 rules:
